@@ -1,0 +1,529 @@
+{
+  "diet": [
+    "orthodox_fasting"
+  ],
+  "corrected_recipes": [],
+  "georgian_lexicon": [
+    {
+      "source": "მგონი წინადადებამ ცოტა გადაგვაპარა. უფრო ბუნებრივი გზა იქნებოდა ამის თქმის",
+      "meaning": "მე ვარ შეფი და მე შემიძლია ხალხს მივეხმარო რეცეპტებში . თუ: მე ვარ შეფი და მე ვეხმარები ხალხს რეცეპტებში. თქვენი ორიგინალური თარგმანი ახლოს იყო მასთან, მაგრამ ვფიქრობ, რომ ეს ვერსი",
+      "updated_at": "2026-04-14T20:23:28.530314"
+    },
+    {
+      "source": "ა",
+      "meaning": "a",
+      "updated_at": "2026-04-14T20:28:50.162380"
+    },
+    {
+      "source": "ბ",
+      "meaning": "b",
+      "updated_at": "2026-04-14T20:28:50.162380"
+    },
+    {
+      "source": "გ",
+      "meaning": "g",
+      "updated_at": "2026-04-14T20:28:50.162380"
+    },
+    {
+      "source": "დ",
+      "meaning": "d",
+      "updated_at": "2026-04-14T20:28:50.162380"
+    },
+    {
+      "source": "ე",
+      "meaning": "e",
+      "updated_at": "2026-04-14T20:28:50.162380"
+    },
+    {
+      "source": "ვ",
+      "meaning": "v",
+      "updated_at": "2026-04-14T20:28:50.162380"
+    },
+    {
+      "source": "ზ",
+      "meaning": "z",
+      "updated_at": "2026-04-14T20:28:50.162380"
+    },
+    {
+      "source": "თ",
+      "meaning": "t",
+      "updated_at": "2026-04-14T20:28:50.162380"
+    },
+    {
+      "source": "ი",
+      "meaning": "i",
+      "updated_at": "2026-04-14T20:28:50.162380"
+    },
+    {
+      "source": "კ",
+      "meaning": "k’",
+      "updated_at": "2026-04-14T20:28:50.162380"
+    },
+    {
+      "source": "ლ",
+      "meaning": "l",
+      "updated_at": "2026-04-14T20:28:50.162380"
+    },
+    {
+      "source": "მ",
+      "meaning": "m",
+      "updated_at": "2026-04-14T20:28:50.162380"
+    },
+    {
+      "source": "ნ",
+      "meaning": "n",
+      "updated_at": "2026-04-14T20:28:50.162380"
+    },
+    {
+      "source": "ო",
+      "meaning": "o",
+      "updated_at": "2026-04-14T20:28:50.162380"
+    },
+    {
+      "source": "პ",
+      "meaning": "p’",
+      "updated_at": "2026-04-14T20:28:50.162380"
+    },
+    {
+      "source": "ჟ",
+      "meaning": "zh",
+      "updated_at": "2026-04-14T20:28:50.162380"
+    },
+    {
+      "source": "რ",
+      "meaning": "r",
+      "updated_at": "2026-04-14T20:28:50.162380"
+    },
+    {
+      "source": "ს",
+      "meaning": "s",
+      "updated_at": "2026-04-14T20:28:50.162380"
+    },
+    {
+      "source": "ტ",
+      "meaning": "t’",
+      "updated_at": "2026-04-14T20:28:50.162380"
+    },
+    {
+      "source": "უ",
+      "meaning": "u",
+      "updated_at": "2026-04-14T20:28:50.162380"
+    },
+    {
+      "source": "ფ",
+      "meaning": "p",
+      "updated_at": "2026-04-14T20:28:50.162380"
+    },
+    {
+      "source": "ქ",
+      "meaning": "k",
+      "updated_at": "2026-04-14T20:28:50.162380"
+    },
+    {
+      "source": "ღ",
+      "meaning": "gh",
+      "updated_at": "2026-04-14T20:28:50.162380"
+    },
+    {
+      "source": "ყ",
+      "meaning": "q’",
+      "updated_at": "2026-04-14T20:28:50.162380"
+    },
+    {
+      "source": "შ",
+      "meaning": "sh",
+      "updated_at": "2026-04-14T20:28:50.162380"
+    },
+    {
+      "source": "ჩ",
+      "meaning": "ch",
+      "updated_at": "2026-04-14T20:28:50.162380"
+    },
+    {
+      "source": "ც",
+      "meaning": "ts",
+      "updated_at": "2026-04-14T20:28:50.162380"
+    },
+    {
+      "source": "ძ",
+      "meaning": "dz",
+      "updated_at": "2026-04-14T20:28:50.162380"
+    },
+    {
+      "source": "წ",
+      "meaning": "ts’",
+      "updated_at": "2026-04-14T20:28:50.162380"
+    },
+    {
+      "source": "ჭ",
+      "meaning": "ch’",
+      "updated_at": "2026-04-14T20:28:50.162380"
+    },
+    {
+      "source": "ხ",
+      "meaning": "kh",
+      "updated_at": "2026-04-14T20:28:50.162380"
+    },
+    {
+      "source": "ჯ",
+      "meaning": "j",
+      "updated_at": "2026-04-14T20:28:50.162380"
+    },
+    {
+      "source": "ჰ",
+      "meaning": "h",
+      "updated_at": "2026-04-14T20:28:50.162380"
+    },
+    {
+      "source": "learn წყალი",
+      "meaning": "water",
+      "updated_at": "2026-04-14T20:29:22.990041"
+    },
+    {
+      "source": "მარილი",
+      "meaning": "salt",
+      "updated_at": "2026-04-14T20:30:12.112482"
+    },
+    {
+      "source": "შაქარი",
+      "meaning": "sugar",
+      "updated_at": "2026-04-14T20:30:12.112482"
+    },
+    {
+      "source": "პილპილი",
+      "meaning": "pepper",
+      "updated_at": "2026-04-14T20:30:12.112482"
+    },
+    {
+      "source": "ხახვი",
+      "meaning": "2 თავი",
+      "updated_at": "2026-04-14T20:53:14.410861"
+    },
+    {
+      "source": "ნიორი",
+      "meaning": "3 კბილი    ,   მომზადების წესი",
+      "updated_at": "2026-04-14T20:53:14.410861"
+    },
+    {
+      "source": "კარტოფილი",
+      "meaning": "potato",
+      "updated_at": "2026-04-14T20:30:12.112482"
+    },
+    {
+      "source": "სტაფილო",
+      "meaning": "carrot",
+      "updated_at": "2026-04-14T20:30:12.112482"
+    },
+    {
+      "source": "პომიდორი",
+      "meaning": "tomato",
+      "updated_at": "2026-04-14T20:30:12.112482"
+    },
+    {
+      "source": "კიტრი",
+      "meaning": "cucumber",
+      "updated_at": "2026-04-14T20:30:12.112482"
+    },
+    {
+      "source": "ქათამი",
+      "meaning": "2 კგ",
+      "updated_at": "2026-04-14T20:53:14.410861"
+    },
+    {
+      "source": "ხორცი",
+      "meaning": "meat",
+      "updated_at": "2026-04-14T20:30:12.112482"
+    },
+    {
+      "source": "კვერცხი",
+      "meaning": "1",
+      "updated_at": "2026-04-14T20:53:14.410861"
+    },
+    {
+      "source": "ფქვილი",
+      "meaning": "flour",
+      "updated_at": "2026-04-14T20:30:12.112482"
+    },
+    {
+      "source": "ზეთი",
+      "meaning": "oil",
+      "updated_at": "2026-04-14T20:30:12.112482"
+    },
+    {
+      "source": "კარაქი",
+      "meaning": "50 გ",
+      "updated_at": "2026-04-14T20:53:14.410861"
+    },
+    {
+      "source": "რძე",
+      "meaning": "milk",
+      "updated_at": "2026-04-14T20:30:12.112482"
+    },
+    {
+      "source": "ყველი",
+      "meaning": "cheese",
+      "updated_at": "2026-04-14T20:30:12.112482"
+    },
+    {
+      "source": "მაიონეზი",
+      "meaning": "mayonnaise",
+      "updated_at": "2026-04-14T20:30:12.112482"
+    },
+    {
+      "source": "ძმარი",
+      "meaning": "vinegar",
+      "updated_at": "2026-04-14T20:30:12.112482"
+    },
+    {
+      "source": "წყალი",
+      "meaning": "water",
+      "updated_at": "2026-04-14T20:30:12.112482"
+    },
+    {
+      "source": "შეწვა",
+      "meaning": "to fry",
+      "updated_at": "2026-04-14T20:31:18.311333"
+    },
+    {
+      "source": "გამოცხობა",
+      "meaning": "to bake",
+      "updated_at": "2026-04-14T20:31:18.311333"
+    },
+    {
+      "source": "დაჭრა",
+      "meaning": "to cut",
+      "updated_at": "2026-04-14T20:31:18.311333"
+    },
+    {
+      "source": "გარევა",
+      "meaning": "to mix",
+      "updated_at": "2026-04-14T20:31:18.311333"
+    },
+    {
+      "source": "დამატება",
+      "meaning": "to add",
+      "updated_at": "2026-04-14T20:31:18.311333"
+    },
+    {
+      "source": "გახეხვა",
+      "meaning": "to grate",
+      "updated_at": "2026-04-14T20:31:18.311333"
+    },
+    {
+      "source": "გაფცქვნა",
+      "meaning": "to peel",
+      "updated_at": "2026-04-14T20:31:18.311333"
+    },
+    {
+      "source": "გაცხელება",
+      "meaning": "to heat",
+      "updated_at": "2026-04-14T20:31:18.311333"
+    },
+    {
+      "source": "გაგრილება",
+      "meaning": "to cool",
+      "updated_at": "2026-04-14T20:31:18.311333"
+    },
+    {
+      "source": "კილოგრამი",
+      "meaning": "kilogram",
+      "updated_at": "2026-04-14T20:31:35.441335"
+    },
+    {
+      "source": "ლიტრი",
+      "meaning": "liter",
+      "updated_at": "2026-04-14T20:31:35.441335"
+    },
+    {
+      "source": "ჭიქა",
+      "meaning": "cup",
+      "updated_at": "2026-04-14T20:31:35.441335"
+    },
+    {
+      "source": "კოვზი",
+      "meaning": "spoon",
+      "updated_at": "2026-04-14T20:31:35.441335"
+    },
+    {
+      "source": "ჩაის კოვზი",
+      "meaning": "teaspoon",
+      "updated_at": "2026-04-14T20:31:35.441335"
+    },
+    {
+      "source": "სუფრის კოვზი",
+      "meaning": "tablespoon",
+      "updated_at": "2026-04-14T20:31:35.441335"
+    },
+    {
+      "source": "ცალი",
+      "meaning": "piece",
+      "updated_at": "2026-04-14T20:31:35.441335"
+    },
+    {
+      "source": "ინგრედიენტები",
+      "meaning": "ingredients",
+      "updated_at": "2026-04-14T20:32:05.185273"
+    },
+    {
+      "source": "მომზადება",
+      "meaning": "preparation",
+      "updated_at": "2026-04-14T20:32:05.185273"
+    },
+    {
+      "source": "გემრიელი",
+      "meaning": "tasty",
+      "updated_at": "2026-04-14T20:32:05.185273"
+    },
+    {
+      "source": "ცხელი",
+      "meaning": "hot",
+      "updated_at": "2026-04-14T20:32:05.185273"
+    },
+    {
+      "source": "ცივი",
+      "meaning": "cold",
+      "updated_at": "2026-04-14T20:32:05.185273"
+    },
+    {
+      "source": "მარტივი",
+      "meaning": "easy",
+      "updated_at": "2026-04-14T20:39:56.441869"
+    },
+    {
+      "source": "სწრაფი",
+      "meaning": "quick",
+      "updated_at": "2026-04-14T20:39:56.441869"
+    },
+    {
+      "source": "რა გავაკეთო ...-ით?",
+      "meaning": "what can I make with ...?",
+      "updated_at": "2026-04-14T20:33:03.640997"
+    },
+    {
+      "source": "მარტივი რეცეპტი მინდა",
+      "meaning": "I want an easy recipe",
+      "updated_at": "2026-04-14T20:33:03.640997"
+    },
+    {
+      "source": "სწრაფი რეცეპტი",
+      "meaning": "quick recipe",
+      "updated_at": "2026-04-14T20:33:03.640997"
+    },
+    {
+      "source": "დაამატე მარილი",
+      "meaning": "add salt",
+      "updated_at": "2026-04-14T20:33:37.448134"
+    },
+    {
+      "source": "აურიე კარგად",
+      "meaning": "mix well",
+      "updated_at": "2026-04-14T20:33:37.448134"
+    },
+    {
+      "source": "შეწვი ტაფაზე",
+      "meaning": "fry in a pan",
+      "updated_at": "2026-04-14T20:33:37.448134"
+    },
+    {
+      "source": "მოხარშე წყალში",
+      "meaning": "boil in water",
+      "updated_at": "2026-04-14T20:33:37.448134"
+    },
+    {
+      "source": "გამოაცხვე ღუმელში",
+      "meaning": "bake in the oven,     10 წუთი – 10 minutes",
+      "updated_at": "2026-04-14T20:33:37.448134"
+    },
+    {
+      "source": "საშუალო ცეცხლზე",
+      "meaning": "on medium heat",
+      "updated_at": "2026-04-14T20:33:37.448134"
+    },
+    {
+      "source": "დაბალ ცეცხლზე",
+      "meaning": "on low heat",
+      "updated_at": "2026-04-14T20:33:37.448134"
+    },
+    {
+      "source": "მაღალ ცეცხლზე",
+      "meaning": "on high heat",
+      "updated_at": "2026-04-14T20:33:37.448134"
+    },
+    {
+      "source": "1 ჩაის კოვზი მარილი   , pattern",
+      "meaning": "[number] + [ingredient].   “with / without”",
+      "updated_at": "2026-04-14T20:39:56.441869"
+    },
+    {
+      "source": "მაქვს",
+      "meaning": "have",
+      "updated_at": "2026-04-14T20:39:56.441869"
+    },
+    {
+      "source": "არ მაქვს",
+      "meaning": "I don’t have",
+      "updated_at": "2026-04-14T20:39:56.441869"
+    },
+    {
+      "source": "ჭამ.  მაქვს",
+      "meaning": "I have",
+      "updated_at": "2026-04-14T20:39:56.441869"
+    },
+    {
+      "source": "მინდა",
+      "meaning": "I want",
+      "updated_at": "2026-04-14T20:39:56.441869"
+    },
+    {
+      "source": "არ მინდა",
+      "meaning": "I don’t want",
+      "updated_at": "2026-04-14T20:39:56.441869"
+    },
+    {
+      "source": "რეცეპტი",
+      "meaning": "recipe",
+      "updated_at": "2026-04-14T20:39:56.441869"
+    },
+    {
+      "source": "დაჭერი",
+      "meaning": "cut",
+      "updated_at": "2026-04-14T20:39:56.441869"
+    },
+    {
+      "source": "დაამატე",
+      "meaning": "add",
+      "updated_at": "2026-04-14T20:39:56.441869"
+    },
+    {
+      "source": "აურიე",
+      "meaning": "mix",
+      "updated_at": "2026-04-14T20:39:56.441869"
+    },
+    {
+      "source": "შეწვი",
+      "meaning": "fry",
+      "updated_at": "2026-04-14T20:39:56.441869"
+    },
+    {
+      "source": "მოხარშე",
+      "meaning": "boil",
+      "updated_at": "2026-04-14T20:39:56.441869"
+    },
+    {
+      "source": "პამიდორი",
+      "meaning": "5 ც",
+      "updated_at": "2026-04-14T20:53:14.410861"
+    },
+    {
+      "source": "ტომატ-პასტა",
+      "meaning": "1 სკ",
+      "updated_at": "2026-04-14T20:53:14.410861"
+    }
+  ],
+  "georgian_notes": [
+    {
+      "note": "this that recipe in georgian learn: ინგრედიენტები\r\n\r\nმარილი\r\nწიწაკა\r\nკარაქი - 50 გ\r\nრეჰანი\r\nქინძი\r\nქათამი - 2 კგ\r\nპამიდორი - 5 ც\r\nტომატ-პასტა - 1 სკ\r\nხახვი - 2 თავი\r\nკვერცხი - 1\r\nნიორი - 3 კბილი    ,   მომზადების წესი\r\nქათამი დაჭერით ნაჭრებად.ღრმა ქვაბში გაადნეთ ცოტა კარაქი და დააწითლეთ ქათმის ნაჭრები მსუბუქად. დააყარეთ დაჭრილი ხახვი, დააფარეთ თავზე და მოშუშეთ. დაამატეთ კანგაცლილი, დაჭრილი პომიდორი და ცოტა წყალში გახსნილი ტომატი. წამოადუღეთ და ხარშეთ დაახლოებით 20 წუთი, სანამ ქათამი არ მომზადდება. ბოლოს ჩაამატეთ ათქვეფილი კვერცხი და სწრაფად მოურიეთ, რომ კარგად გაიხსნას. დაამატეთ დაჭრილი წიწაკა, ნიორი, მწვანილი და მარილი. კვერცხი აუცილებელი არ არის, მაგრამ ძალიან უხდება.",
+      "updated_at": "2026-04-14T20:53:14.410861"
+    }
+  ]
+}

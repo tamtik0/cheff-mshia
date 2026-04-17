@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chef Moo - Gothic Kitchen</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gothic-purple: #1a0b2e;
+            --dark-purple: #2d1b4e;
+            --mid-purple: #4a2c6e;
+            --light-purple: #7c3aed;
+            --accent-pink: #ff6b9d;
+            --cream: #f5e6d3;
+            --gold: #d4af37;
+        }
+
+        body {
+            font-family: 'Crimson Text', serif;
+            background: linear-gradient(135deg, var(--gothic-purple) 0%, var(--dark-purple) 50%, var(--mid-purple) 100%);
+            min-height: 100vh;
+            color: var(--cream);
+            margin: 0;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Sidebar with FULL BODY COW */
+        .sidebar {
+            width: 300px;
+            background: linear-gradient(180deg, var(--dark-purple) 0%, var(--gothic-purple) 100%);
+            border-right: 2px solid var(--light-purple);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-y: auto;
+        }
+
+        .logo-area {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(124, 58, 237, 0.3);
+            padding-bottom: 20px;
+            width: 100%;
+        }
+
+        /* Full Body Cow for Sidebar */
+        .cow-full {
+            width: 150px;
+            height: 180px;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 0 15px rgba(255, 107, 157, 0.4));
+        }
+
+        .logo-text {
+            font-family: 'Cinzel', serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent-pink);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            letter-spacing: 2px;
+        }
+
+        .logo-sub {
+            font-size: 14px;
+            color: var(--gold);
+            font-style: italic;
+            margin-top: 5px;
+        }
+
+        /* Navigation */
+        .nav-menu {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .nav-item {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: rgba(124, 58, 237, 0.2);
+            border: 1px solid rgba(124, 58, 237, 0.4);
+            border-radius: 10px;
+            color: var(--cream);
+            text-decoration: none;
+            font-family: 'Cinzel', serif;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .nav-item:hover {
+            background: var(--light-purple);
+            transform: translateX(5px);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, var(--light-purple), var(--accent-pink));
+            color: var(--gothic-purple);
+            font-weight: 600;
+        }
+
+        /* Main Content */
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: rgba(26, 11, 46, 0.95);
+            position: relative;
+        }
+
+        .header {
+            padding: 20px 30px;
+            border-bottom: 1px solid rgba(124, 58, 237, 0.3);
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .header h1 {
+            font-family: 'Cinzel', serif;
+            color: var(--accent-pink);
+            font-size: 28px;
+            margin: 0;
+        }
+
+        .welcome-user {
+            color: var(--gold);
+            font-style: italic;
+            margin-top: 5px;
+        }
+
+        /* Chat Area */
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+        }
+
+        /* Name Input Form (First Visit) */
+        .name-form {
+            max-width: 400px;
+            margin: 100px auto;
+            background: rgba(45, 27, 78, 0.8);
+            border: 1px solid var(--light-purple);
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .name-form h2 {
+            font-family: 'Cinzel', serif;
+            color: var(--accent-pink);
+            margin-bottom: 20px;
+        }
+
+        .name-form input {
+            width: 100%;
+            padding: 12px;
+            margin: 15px 0;
+            border: 1px solid var(--light-purple);
+            border-radius: 8px;
+            background: rgba(26, 11, 46, 0.8);
+            color: var(--cream);
+            font-size: 16px;
+            font-family: 'Crimson Text', serif;
+        }
+
+        .name-form input::placeholder {
+            color: rgba(245, 230, 211, 0.5);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, var(--light-purple), var(--accent-pink));
+            border: none;
+            border-radius: 8px;
+            color: var(--gothic-purple);
+            font-family: 'Cinzel', serif;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        /* Messages */
+        .message {
+            display: flex;
+            margin-bottom: 25px;
+            animation: fadeIn 0.5s;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message-bubble {
+            max-width: 70%;
+            padding: 15px 20px;
+            border-radius: 15px;
+            line-height: 1.5;
+        }
+
+        .message.user .message-bubble {
+            background: linear-gradient(135deg, var(--light-purple), var(--accent-pink));
+            color: var(--gothic-purple);
+            border-bottom-right-radius: 5px;
+        }
+
+        .message.ai {
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .message.ai .message-bubble {
+            background: rgba(45, 27, 78, 0.8);
+            border: 1px solid rgba(124, 58, 237, 0.4);
+            border-bottom-left-radius: 5px;
+        }
+
+        /* COW HEAD ONLY for chat */
+        .cow-avatar {
+            width: 50px;
+            height: 50px;
+            flex-shrink: 0;
+            filter: drop-shadow(0 0 5px rgba(255, 107, 157, 0.3));
+        }
+
+        .message-header {
+            font-family: 'Cinzel', serif;
+            font-size: 12px;
+            color: var(--gold);
+            margin-bottom: 5px;
+        }
+
+        .message.user .message-header {
+            text-align: right;
+            color: rgba(26, 11, 46, 0.8);
+        }
+
+        /* Input Area */
+        .input-area {
+            padding: 20px 30px;
+            border-top: 1px solid rgba(124, 58, 237, 0.3);
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .input-form {
+            display: flex;
+            gap: 10px;
+        }
+
+        .message-input {
+            flex: 1;
+            padding: 15px;
+            border: 1px solid rgba(124, 58, 237, 0.4);
+            border-radius: 16px;
+            background: rgba(45, 27, 78, 0.6);
+            color: var(--cream);
+            font-size: 16px;
+            font-family: 'Crimson Text', serif;
+            resize: none;
+            min-height: 52px;
+            max-height: 220px;
+            line-height: 1.4;
+            overflow-y: auto;
+        }
+
+        .message-input::placeholder {
+            color: rgba(245, 230, 211, 0.4);
+        }
+
+        .send-btn {
+            padding: 15px 30px;
+            background: linear-gradient(135deg, var(--light-purple), var(--accent-pink));
+            border: none;
+            border-radius: 25px;
+            color: var(--gothic-purple);
+            font-family: 'Cinzel', serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Recipe Formatting */
+        .recipe-header {
+            font-family: 'Cinzel', serif;
+            font-size: 20px;
+            color: var(--accent-pink);
+            margin: 15px 0 10px;
+            text-shadow: 0 0 10px rgba(255, 107, 157, 0.3);
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 8px;
+        }
+
+        .recipe-meta {
+            color: var(--gold);
+            font-size: 14px;
+            margin: 5px 0;
+            font-style: italic;
+        }
+
+        .section-title {
+            font-family: 'Cinzel', serif;
+            color: var(--accent-pink);
+            font-size: 18px;
+            margin: 20px 0 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ingredient-list {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0;
+        }
+
+        .ingredient-list li {
+            padding: 8px 0 8px 25px;
+            position: relative;
+            color: rgba(245, 230, 211, 0.9);
+            border-bottom: 1px dashed rgba(124, 58, 237, 0.3);
+        }
+
+        .ingredient-list li:last-child {
+            border-bottom: none;
+        }
+
+        .ingredient-list li::before {
+            content: '❧';
+            position: absolute;
+            left: 0;
+            color: var(--accent-pink);
+            font-size: 14px;
+        }
+
+        .instruction-list {
+            counter-reset: step-counter;
+            list-style: none;
+            padding: 0;
+            margin: 10px 0;
+        }
+
+        .instruction-list li {
+            counter-increment: step-counter;
+            padding: 12px 0 12px 40px;
+            position: relative;
+            color: rgba(245, 230, 211, 0.9);
+            margin-bottom: 8px;
+            background: rgba(124, 58, 237, 0.1);
+            border-radius: 8px;
+            border-left: 3px solid var(--light-purple);
+        }
+
+        .instruction-list li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--accent-pink);
+            color: var(--gothic-purple);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 12px;
+            font-family: 'Cinzel', serif;
+        }
+
+        strong.recipe-title {
+            color: var(--accent-pink);
+            font-family: 'Cinzel', serif;
+        }
+
+        /* Warning */
+        .warning {
+            background: rgba(255, 107, 157, 0.2);
+            border: 1px solid var(--accent-pink);
+            color: var(--accent-pink);
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-family: 'Cinzel', serif;
+        }
+
+        /* Save button */
+        .save-btn {
+            background: var(--accent-pink);
+            color: var(--gothic-purple);
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            font-family: 'Cinzel', serif;
+            margin-top: 10px;
+        }
+
+        .save-btn:hover {
+            background: var(--gold);
+        }
+
+        /* Header actions */
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .header-btn {
+            background: rgba(124, 58, 237, 0.3);
+            border: 1px solid var(--light-purple);
+            color: var(--cream);
+            padding: 5px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Cinzel', serif;
+            font-size: 12px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .header-btn:hover {
+            background: var(--light-purple);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Sidebar with FULL BODY COW -->
+        <aside class="sidebar">
+            <div class="logo-area">
+                <!-- FULL BODY COW SVG -->
+                <svg class="cow-full" viewBox="0 0 120 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Legs -->
+                    <rect x="35" y="110" width="8" height="25" fill="#6b21a8" rx="2" />
+                    <rect x="77" y="110" width="8" height="25" fill="#6b21a8" rx="2" />
+                    <rect x="50" y="115" width="8" height="20" fill="#6b21a8" rx="2" />
+                    <rect x="65" y="115" width="8" height="20" fill="#6b21a8" rx="2" />
+
+                    <!-- Body (fluffy) -->
+                    <ellipse cx="60" cy="95" rx="35" ry="30" fill="#7c3aed" />
+                    <circle cx="45" cy="85" r="8" fill="#a855f7" opacity="0.5" />
+                    <circle cx="75" cy="85" r="8" fill="#a855f7" opacity="0.5" />
+                    <circle cx="60" cy="105" r="10" fill="#6b21a8" opacity="0.3" />
+
+                    <!-- Heart spots on body -->
+                    <path
+                        d="M 45 90 C 43 88 40 88 38 90 C 36 92 36 94 38 96 L 45 103 L 52 96 C 54 94 54 92 52 90 C 50 88 47 88 45 90 Z"
+                        fill="#ff6b9d" opacity="0.8" />
+                    <path
+                        d="M 75 95 C 73 93 70 93 68 95 C 66 97 66 99 68 101 L 75 108 L 82 101 C 84 99 84 97 82 95 C 80 93 77 93 75 95 Z"
+                        fill="#ff6b9d" opacity="0.6" />
+
+                    <!-- Apron -->
+                    <path d="M 45 95 L 45 125 Q 45 128 48 128 L 72 128 Q 75 128 75 125 L 75 95 Z" fill="#f5e6d3"
+                        opacity="0.9" />
+                    <rect x="58" y="95" width="4" height="5" fill="#f5e6d3" />
+
+                    <!-- Heart on apron -->
+                    <path
+                        d="M 60 110 C 58 108 55 108 53 110 C 51 112 51 114 53 116 L 60 123 L 67 116 C 69 114 69 112 67 110 C 65 108 62 108 60 110 Z"
+                        fill="#ff6b9d" />
+
+                    <!-- Tail -->
+                    <path d="M 95 90 Q 110 85 108 70" stroke="#7c3aed" stroke-width="3" fill="none" />
+                    <circle cx="108" cy="68" r="4" fill="#ff6b9d" />
+
+                    <!-- Arms -->
+                    <ellipse cx="30" cy="95" rx="8" ry="12" fill="#7c3aed" transform="rotate(-20 30 95)" />
+                    <ellipse cx="90" cy="95" rx="8" ry="12" fill="#7c3aed" transform="rotate(20 90 95)" />
+
+                    <!-- HEAD (smaller, on top of body) -->
+                    <circle cx="60" cy="55" r="28" fill="#6b21a8" />
+
+                    <!-- Ears -->
+                    <ellipse cx="35" cy="45" rx="10" ry="14" fill="#7c3aed" transform="rotate(-15 35 45)" />
+                    <ellipse cx="85" cy="45" rx="10" ry="14" fill="#7c3aed" transform="rotate(15 85 45)" />
+                    <ellipse cx="35" cy="48" rx="6" ry="9" fill="#ff6b9d" opacity="0.8" transform="rotate(-15 35 48)" />
+
+                    <!-- Horns -->
+                    <path d="M 38 32 Q 35 22 31 18 Q 29 16 27 18 Q 25 20 28 23 Q 33 28 36 34 Z" fill="#d4af37" />
+                    <path d="M 82 32 Q 85 22 89 18 Q 91 16 93 18 Q 95 20 92 23 Q 87 28 84 34 Z" fill="#d4af37" />
+
+                    <!-- Chef Hat -->
+                    <ellipse cx="60" cy="22" rx="34" ry="10" fill="#f5e6d3" />
+                    <rect x="28" y="19" width="64" height="6" fill="#f5e6d3" rx="2" />
+                    <ellipse cx="60" cy="10" rx="22" ry="18" fill="#f5e6d3" />
+                    <path
+                        d="M 58 10 C 57 9 55 9 54 10 C 53 11 53 12 54 13 L 58 16 L 62 13 C 63 12 63 11 62 10 C 61 9 59 9 58 10 Z"
+                        fill="#ff6b9d" />
+
+                    <!-- Face spots -->
+                    <path
+                        d="M 42 48 C 40 46 37 46 35 48 C 33 50 33 52 35 54 L 42 61 L 49 54 C 51 52 51 50 49 48 C 47 46 44 46 42 48 Z"
+                        fill="#ff6b9d" />
+                    <path
+                        d="M 78 52 C 76 50 73 50 71 52 C 69 54 69 56 71 58 L 78 65 L 85 58 C 87 56 87 54 85 52 C 83 50 80 50 78 52 Z"
+                        fill="#ff6b9d" opacity="0.8" />
+
+                    <!-- Face -->
+                    <circle cx="46" cy="50" r="5" fill="#1a0b2e" />
+                    <circle cx="74" cy="50" r="5" fill="#1a0b2e" />
+                    <circle cx="47" cy="49" r="2" fill="white" />
+                    <circle cx="75" cy="49" r="2" fill="white" />
+
+                    <!-- Snout -->
+                    <ellipse cx="60" cy="62" rx="18" ry="14" fill="#e9d5ff" />
+                    <ellipse cx="53" cy="64" rx="3" ry="4" fill="#7c3aed" />
+                    <ellipse cx="67" cy="64" rx="3" ry="4" fill="#7c3aed" />
+
+                    <!-- Smile -->
+                    <path d="M 54 72 Q 60 76 66 72" stroke="#1a0b2e" stroke-width="2" fill="none" />
+
+                    <!-- Blush -->
+                    <ellipse cx="40" cy="56" rx="4" ry="2.5" fill="#ff6b9d" opacity="0.4" />
+                    <ellipse cx="80" cy="56" rx="4" ry="2.5" fill="#ff6b9d" opacity="0.4" />
+                </svg>
+
+                <div class="logo-text">Chef Moo</div>
+                <div class="logo-sub">Gothic AI Recipe</div>
+            </div>
+
+            <nav class="nav-menu">
+                <a href="/" class="nav-item active">✦ New Chat</a>
+                <a href="/history" class="nav-item">📜 History</a>
+                <a href="/favorites" class="nav-item">❤ Favorites</a>
+            </nav>
+        </aside>
+
+        <!-- Main Area -->
+        <main class="main">
+            <!-- Ask for Name (shown if no username in session) -->
+            {% if not username %}
+            <div class="chat-container" id="chat-container">
+                <div class="name-form">
+                    <h2>✦ Welcome to the Kitchen</h2>
+                    <p style="margin-bottom: 20px; color: rgba(245,230,211,0.8);">
+                        I am Chef Moo, your mystical recipe companion.<br>
+                        What may I call you?
+                    </p>
+                    <form method="POST" action="/set_name">
+                        <input type="text" name="username" placeholder="Enter your name..." required>
+                        <button type="submit" class="submit-btn">Enter the Kitchen</button>
+                    </form>
+                </div>
+            </div>
+            {% else %}
+
+            <!-- Chat Interface -->
+            <div class="header">
+                <h1>✦ Chef Moo's Kitchen</h1>
+                <div class="welcome-user">Welcome, {{ username }}! What would you like to cook?</div>
+                <div class="header-actions">
+                    <form method="POST" action="/new_chat" style="display: inline;">
+                        <button type="submit" class="header-btn">✦ New Chat</button>
+                    </form>
+                    <form method="POST" action="/save_chat" style="display: inline;">
+                        <button type="submit" class="header-btn">💾 Save Chat</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="chat-container">
+                {% if error %}
+                <div class="warning">⚠️ {{ error }}</div>
+                {% endif %}
+
+                {% if not messages %}
+                <!-- First Message from Cow -->
+                <div class="message ai">
+                    <!-- COW HEAD ONLY SVG -->
+                    <svg class="cow-avatar" viewBox="0 0 120 120" fill="none">
+                        <!-- Just the head - no body -->
+                        <circle cx="60" cy="55" r="28" fill="#6b21a8" />
+                        <ellipse cx="35" cy="45" rx="10" ry="14" fill="#7c3aed" transform="rotate(-15 35 45)" />
+                        <ellipse cx="85" cy="45" rx="10" ry="14" fill="#7c3aed" transform="rotate(15 85 45)" />
+                        <ellipse cx="35" cy="48" rx="6" ry="9" fill="#ff6b9d" opacity="0.8"
+                            transform="rotate(-15 35 48)" />
+                        <path d="M 38 32 Q 35 22 31 18 Q 29 16 27 18 Q 25 20 28 23 Q 33 28 36 34 Z" fill="#d4af37" />
+                        <path d="M 82 32 Q 85 22 89 18 Q 91 16 93 18 Q 95 20 92 23 Q 87 28 84 34 Z" fill="#d4af37" />
+                        <ellipse cx="60" cy="22" rx="34" ry="10" fill="#f5e6d3" />
+                        <rect x="28" y="19" width="64" height="6" fill="#f5e6d3" rx="2" />
+                        <ellipse cx="60" cy="10" rx="22" ry="18" fill="#f5e6d3" />
+                        <path d="M 58 10 C 57 9 55 9 54 10 C 53 11 53 12 54 13 L 58 16 L 62 13 Z" fill="#ff6b9d" />
+                        <path d="M 42 48 C 40 46 37 46 35 48 C 33 50 33 52 35 54 L 42 61 L 49 54 Z" fill="#ff6b9d" />
+                        <path d="M 76 52 C 74 50 71 50 69 52 C 67 54 67 56 69 58 L 76 65 L 83 58 Z" fill="#ff6b9d"
+                            opacity="0.8" />
+                        <circle cx="46" cy="50" r="5" fill="#1a0b2e" />
+                        <circle cx="74" cy="50" r="5" fill="#1a0b2e" />
+                        <circle cx="47" cy="49" r="2" fill="white" />
+                        <circle cx="75" cy="49" r="2" fill="white" />
+                        <ellipse cx="60" cy="62" rx="18" ry="14" fill="#e9d5ff" />
+                        <ellipse cx="53" cy="64" rx="3" ry="4" fill="#7c3aed" />
+                        <ellipse cx="67" cy="64" rx="3" ry="4" fill="#7c3aed" />
+                        <path d="M 54 72 Q 60 76 66 72" stroke="#1a0b2e" stroke-width="2" fill="none" />
+                        <ellipse cx="40" cy="56" rx="4" ry="2.5" fill="#ff6b9d" opacity="0.4" />
+                        <ellipse cx="80" cy="56" rx="4" ry="2.5" fill="#ff6b9d" opacity="0.4" />
+                    </svg>
+
+                    <div class="message-bubble">
+                        <div class="message-header">Chef Moo says:</div>
+                        <div>Salutations, {{ username }}! 🌙<br><br>
+                            I am Chef Moo, guardian of the Gothic Kitchen. Ask me for recipes,
+                            culinary secrets, or cooking wisdom. I shall remember your dietary
+                            preferences and allergies.<br><br>
+                            What dish shall we conjure today?</div>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% for msg in messages %}
+                {% if msg.role == 'user' %}
+                <div class="message user">
+                    <div class="message-bubble">
+                        <div class="message-header">{{ username }}</div>
+                        <div>{{ msg.content }}</div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="message ai">
+                    <svg class="cow-avatar" viewBox="0 0 120 120" fill="none">
+                        <!-- HEAD ONLY -->
+                        <circle cx="60" cy="55" r="28" fill="#6b21a8" />
+                        <ellipse cx="35" cy="45" rx="10" ry="14" fill="#7c3aed" transform="rotate(-15 35 45)" />
+                        <ellipse cx="85" cy="45" rx="10" ry="14" fill="#7c3aed" transform="rotate(15 85 45)" />
+                        <path d="M 38 32 Q 35 22 31 18 Q 29 16 27 18 Q 25 20 28 23 Z" fill="#d4af37" />
+                        <path d="M 82 32 Q 85 22 89 18 Q 91 16 93 18 Q 95 20 92 23 Z" fill="#d4af37" />
+                        <circle cx="60" cy="55" r="28" fill="#6b21a8" />
+                        <path d="M 42 48 C 40 46 37 46 35 48 C 33 50 33 52 35 54 L 42 61 L 49 54 Z" fill="#ff6b9d" />
+                        <circle cx="46" cy="50" r="5" fill="#1a0b2e" />
+                        <circle cx="74" cy="50" r="5" fill="#1a0b2e" />
+                        <circle cx="47" cy="49" r="2" fill="white" />
+                        <circle cx="75" cy="49" r="2" fill="white" />
+                        <ellipse cx="60" cy="62" rx="18" ry="14" fill="#e9d5ff" />
+                        <path d="M 54 72 Q 60 76 66 72" stroke="#1a0b2e" stroke-width="2" fill="none" />
+                    </svg>
+                    <div class="message-bubble">
+                        <div class="message-header">Chef Moo says:</div>
+                        <div>{{ msg.content | safe }}</div>
+                        <!-- Save Recipe Button -->
+                        <form method="POST" action="/save_favorite" style="margin-top: 10px;">
+                            <input type="hidden" name="content" value="{{ msg.content }}">
+                            <button type="submit" class="save-btn">❤ Save Recipe</button>
+                        </form>
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+                <div id="chat-bottom-anchor" style="height: 1px;"></div>
+            </div>
+
+            <div class="input-area">
+                <form method="POST" action="/chat" class="input-form" id="chat-form"
+                    onsubmit="this.querySelector('.send-btn').disabled = true;">
+                    <textarea name="message" class="message-input" id="message-input"
+                        placeholder="Ask me for a recipe, {{ username }}..." required {% if error %}disabled{% endif %}></textarea>
+                    <button type="submit" class="send-btn" {% if error %}disabled{% endif %}>
+                        ✦ Send
+                    </button>
+                </form>
+            </div>
+            {% endif %}
+            {% if debug %}
+            <div
+                style="position: fixed; bottom: 0; right: 0; background: rgba(0,0,0,0.8); color: #0f0; padding: 10px; font-family: monospace; font-size: 12px; max-width: 300px;">
+                DEBUG INFO:<br>
+                Session: {{ debug.session_keys }}<br>
+                Messages: {{ debug.msg_count }}<br>
+                Last Error: {{ debug.last_error }}
+            </div>
+            {% endif %}
+
+        </main>
+    </div>
+<script>
+    (function () {
+        const chatContainer = document.getElementById('chat-container');
+        const chatForm = document.getElementById('chat-form');
+        const messageInput = document.getElementById('message-input');
+        const bottomAnchor = document.getElementById('chat-bottom-anchor');
+        const SHOULD_SCROLL_KEY = 'chef_moo_scroll_to_latest';
+
+        function scrollChatToBottom() {
+            if (chatContainer) {
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+            if (bottomAnchor) {
+                bottomAnchor.scrollIntoView({ block: 'end' });
+            }
+            window.scrollTo(0, document.body.scrollHeight);
+        }
+
+        if (chatForm) {
+            chatForm.addEventListener('submit', function () {
+                sessionStorage.setItem(SHOULD_SCROLL_KEY, '1');
+            });
+        }
+
+        if (sessionStorage.getItem(SHOULD_SCROLL_KEY) === '1') {
+            scrollChatToBottom();
+            sessionStorage.removeItem(SHOULD_SCROLL_KEY);
+        }
+
+        // Keep chat at latest when page loads/reloads.
+        scrollChatToBottom();
+        setTimeout(scrollChatToBottom, 50);
+        setTimeout(scrollChatToBottom, 200);
+
+        // Auto-grow textarea for long prompts.
+        if (messageInput) {
+            const autoResize = function () {
+                this.style.height = 'auto';
+                this.style.height = Math.min(this.scrollHeight, 220) + 'px';
+            };
+
+            messageInput.addEventListener('input', autoResize);
+            autoResize.call(messageInput);
+
+            // Enter sends, Shift+Enter adds newline.
+            messageInput.addEventListener('keydown', function (event) {
+                if (event.key === 'Enter' && !event.shiftKey) {
+                    event.preventDefault();
+                    if (chatForm) {
+                        chatForm.requestSubmit();
+                    }
+                }
+            });
+        }
+    })();
+</script>
+ </body>
+</html>

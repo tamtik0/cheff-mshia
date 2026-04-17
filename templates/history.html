@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History - Chef Moo</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gothic-purple: #1a0b2e;
+            --dark-purple: #2d1b4e;
+            --light-purple: #7c3aed;
+            --accent-pink: #ff6b9d;
+            --cream: #f5e6d3;
+            --gold: #d4af37;
+        }
+
+        body {
+            font-family: 'Crimson Text', serif;
+            background: linear-gradient(135deg, var(--gothic-purple) 0%, var(--dark-purple) 100%);
+            min-height: 100vh;
+            color: var(--cream);
+            padding: 40px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            color: var(--accent-pink);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: var(--gold);
+            text-decoration: none;
+        }
+
+        .chat-item {
+            background: rgba(124, 58, 237, 0.2);
+            border: 1px solid rgba(124, 58, 237, 0.4);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .chat-title {
+            font-family: 'Cinzel', serif;
+            color: var(--accent-pink);
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .chat-date {
+            color: var(--gold);
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .chat-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            background: var(--light-purple);
+            color: var(--cream);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-family: 'Cinzel', serif;
+            font-size: 12px;
+        }
+
+        .btn:hover {
+            background: var(--accent-pink);
+            color: var(--gothic-purple);
+        }
+
+        .btn-delete {
+            background: transparent;
+            border: 1px solid var(--accent-pink);
+            color: var(--accent-pink);
+        }
+
+        .empty {
+            text-align: center;
+            color: rgba(245, 230, 211, 0.5);
+            padding: 40px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Chat</a>
+        <h1>📜 Chat History</h1>
+
+        {% if chats %}
+        {% for chat in chats %}
+        <div class="chat-item">
+            <div class="chat-title">{{ chat.title or 'Untitled Chat' }}</div>
+            <div class="chat-date">{{ chat.created_at }}</div>
+            <div>{{ chat.messages|length }} messages</div>
+            <div class="chat-actions">
+                <a href="/load_chat/{{ chat.id }}" class="btn">Load Chat</a>
+                <form method="POST" action="/delete_chat/{{ chat.id }}" style="display: inline;">
+                    <button type="submit" class="btn btn-delete"
+                        onclick="return confirm('Delete this chat?')">Delete</button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="empty">No saved chats yet</div>
+        {% endif %}
+    </div>
+</body>
+
+</html>

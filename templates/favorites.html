@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Favorites - Chef Moo</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gothic-purple: #1a0b2e;
+            --dark-purple: #2d1b4e;
+            --light-purple: #7c3aed;
+            --accent-pink: #ff6b9d;
+            --cream: #f5e6d3;
+            --gold: #d4af37;
+        }
+
+        body {
+            font-family: 'Crimson Text', serif;
+            background: linear-gradient(135deg, var(--gothic-purple) 0%, var(--dark-purple) 100%);
+            min-height: 100vh;
+            color: var(--cream);
+            padding: 40px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            color: var(--accent-pink);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: var(--gold);
+            text-decoration: none;
+        }
+
+        .recipe-card {
+            background: rgba(124, 58, 237, 0.2);
+            border: 1px solid rgba(124, 58, 237, 0.4);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .recipe-title {
+            font-family: 'Cinzel', serif;
+            color: var(--accent-pink);
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .recipe-content {
+            white-space: pre-wrap;
+            color: rgba(245, 230, 211, 0.9);
+            margin-bottom: 15px;
+            max-height: 200px;
+            overflow: hidden;
+        }
+
+        .btn-delete {
+            padding: 8px 16px;
+            background: transparent;
+            border: 1px solid var(--accent-pink);
+            color: var(--accent-pink);
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Cinzel', serif;
+        }
+
+        .btn-delete:hover {
+            background: var(--accent-pink);
+            color: var(--gothic-purple);
+        }
+
+        .empty {
+            text-align: center;
+            color: rgba(245, 230, 211, 0.5);
+            padding: 40px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Chat</a>
+        <h1>❤ Saved Recipes</h1>
+
+        {% if favorites %}
+        {% for fav in favorites %}
+        <div class="recipe-card">
+            <div class="recipe-title">{{ fav.title }}</div>
+            <div class="recipe-content">{{ fav.content }}</div>
+            <form method="POST" action="/delete_favorite/{{ fav.id }}">
+                <button type="submit" class="btn-delete"
+                    onclick="return confirm('Remove from favorites?')">Remove</button>
+            </form>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="empty">No favorites yet</div>
+        {% endif %}
+    </div>
+</body>
+
+</html>

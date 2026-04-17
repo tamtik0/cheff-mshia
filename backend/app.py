@@ -70,6 +70,16 @@ def get_favorites():
         return data
     return data.get('recipes', [])
 
+def get_user_history(user_id):
+    if not user_id:
+        return []
+    return [chat for chat in get_history() if chat.get('user_id') == user_id]
+
+def get_user_favorites(user_id):
+    if not user_id:
+        return []
+    return [recipe for recipe in get_favorites() if recipe.get('user_id') == user_id]
+
 def save_favorites(recipes):
     save_json(FAVORITES_FILE, {'recipes': recipes})
 
@@ -432,7 +442,8 @@ def set_name():
             'id': str(uuid.uuid4()),
             'title': 'New Chat',
             'messages': [],
-            'created_at': datetime.now().isoformat()
+            'created_at': datetime.now().isoformat(),
+            'user_id': session['user_id']
         }
     return redirect(url_for('serve_index'))
 
@@ -542,6 +553,7 @@ def save_current_chat():
     
     chat_data = {
         'id': current_chat['id'],
+        'user_id': session_id,
         'title': current_chat['title'],
         'messages': current_chat['messages'],
         'created_at': current_chat['created_at'],
@@ -562,14 +574,14 @@ def save_current_chat():
 def show_history():
     if 'username' not in session:
         return redirect(url_for('serve_index'))
-    chats = get_history()
+    chats = get_user_history(session.get('user_id'))
     return render_template('history.html', username=session['username'], chats=chats)
 
 @app.route('/favorites')
 def show_favorites():
     if 'username' not in session:
         return redirect(url_for('serve_index'))
-    favorites = get_favorites()
+    favorites = get_user_favorites(session.get('user_id'))
     return render_template('favorites.html', username=session['username'], favorites=favorites)
 
 @app.route('/load_chat/<chat_id>')
@@ -577,7 +589,7 @@ def load_chat(chat_id):
     if 'user_id' not in session:
         return redirect(url_for('serve_index'))
     
-    chats = get_history()
+    chats = get_user_history(session['user_id'])
     chat = next((c for c in chats if c['id'] == chat_id), None)
     
     if chat:
@@ -586,22 +598,26 @@ def load_chat(chat_id):
             'id': chat['id'],
             'title': chat['title'],
             'messages': chat['messages'],
-            'created_at': chat['created_at']
+            'created_at': chat['created_at'],
+            'user_id': session_id
         }
     
     return redirect(url_for('serve_index'))
 
 @app.route('/delete_chat/<chat_id>', methods=['POST'])
 def delete_chat(chat_id):
+    if 'user_id' not in session:
+        return redirect(url_for('serve_index'))
+    user_id = session['user_id']
     chats = get_history()
-    chats = [c for c in chats if c['id'] != chat_id]
+    chats = [c for c in chats if not (c.get('id') == chat_id and c.get('user_id') == user_id)]
     save_history(chats)
     return redirect(url_for('show_history'))
 
 @app.route('/save_favorite', methods=['POST'])
 def save_favorite():
     content = request.form.get('content', '')
-    if not content:
+    if not content or 'user_id' not in session:
         return redirect(url_for('serve_index'))
     
     # Extract title
@@ -617,6 +633,7 @@ def save_favorite():
     recipes = get_favorites()
     recipe = {
         'id': str(uuid.uuid4()),
+        'user_id': session['user_id'],
         'title': title or 'Recipe',
         'content': clean_content,
         'created_at': datetime.now().isoformat()
@@ -628,8 +645,11 @@ def save_favorite():
 
 @app.route('/delete_favorite/<fav_id>', methods=['POST'])
 def delete_favorite(fav_id):
+    if 'user_id' not in session:
+        return redirect(url_for('serve_index'))
+    user_id = session['user_id']
     recipes = get_favorites()
-    recipes = [r for r in recipes if r['id'] != fav_id]
+    recipes = [r for r in recipes if not (r.get('id') == fav_id and r.get('user_id') == user_id)]
     save_favorites(recipes)
     return redirect(url_for('show_favorites'))
 

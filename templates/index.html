@@ -671,8 +671,9 @@
                         I am Cheff Mshia, your mystical recipe companion.<br>
                         What may I call you?
                     </p>
-                    <form method="POST" action="/set_name">
-                        <input type="text" name="username" placeholder="Enter your name..." required>
+                    <form method="POST" action="/set_name" autocomplete="off">
+                        <input type="text" name="username" placeholder="Enter your name..." autocomplete="off"
+                            autocorrect="off" autocapitalize="off" spellcheck="false" required>
                         <button type="submit" class="submit-btn">Enter the Kitchen</button>
                     </form>
                 </div>

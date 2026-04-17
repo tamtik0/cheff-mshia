@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chef Moo - Gothic Kitchen</title>
+    <title>Cheff Mshia - Gothic Kitchen</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
 
@@ -559,7 +559,7 @@
                     <ellipse cx="80" cy="56" rx="4" ry="2.5" fill="#ff6b9d" opacity="0.4" />
                 </svg>
 
-                <div class="logo-text">Chef Moo</div>
+                <div class="logo-text">Cheff Mshia</div>
                 <div class="logo-sub">Gothic AI Recipe</div>
             </div>
 
@@ -578,7 +578,7 @@
                 <div class="name-form">
                     <h2>✦ Welcome to the Kitchen</h2>
                     <p style="margin-bottom: 20px; color: rgba(245,230,211,0.8);">
-                        I am Chef Moo, your mystical recipe companion.<br>
+                        I am Cheff Mshia, your mystical recipe companion.<br>
                         What may I call you?
                     </p>
                     <form method="POST" action="/set_name">
@@ -591,7 +591,7 @@
 
             <!-- Chat Interface -->
             <div class="header">
-                <h1>✦ Chef Moo's Kitchen</h1>
+                <h1>✦ Cheff Mshia's Kitchen</h1>
                 <div class="welcome-user">Welcome, {{ username }}! What would you like to cook?</div>
                 <div class="header-actions">
                     <form method="POST" action="/new_chat" style="display: inline;">
@@ -641,12 +641,12 @@
                     </svg>
 
                     <div class="message-bubble">
-                        <div class="message-header">Chef Moo says:</div>
-                        <div>Salutations, {{ username }}! 🌙<br><br>
-                            I am Chef Moo, guardian of the Gothic Kitchen. Ask me for recipes,
+                        <div class="message-header">Cheff Mshia says:</div>
+                        <div>Welcome , {{ username }}! 🌙<br><br>
+                            I am Cheff Mshia. Ask me for recipes,
                             culinary secrets, or cooking wisdom. I shall remember your dietary
                             preferences and allergies.<br><br>
-                            What dish shall we conjure today?</div>
+                            What dish shall we make today?</div>
                     </div>
                 </div>
                 {% endif %}
@@ -678,7 +678,7 @@
                         <path d="M 54 72 Q 60 76 66 72" stroke="#1a0b2e" stroke-width="2" fill="none" />
                     </svg>
                     <div class="message-bubble">
-                        <div class="message-header">Chef Moo says:</div>
+                        <div class="message-header">Cheff Mshia says:</div>
                         <div>{{ msg.content | safe }}</div>
                         <!-- Save Recipe Button -->
                         <form method="POST" action="/save_favorite" style="margin-top: 10px;">
@@ -721,7 +721,7 @@
         const chatForm = document.getElementById('chat-form');
         const messageInput = document.getElementById('message-input');
         const bottomAnchor = document.getElementById('chat-bottom-anchor');
-        const SHOULD_SCROLL_KEY = 'chef_moo_scroll_to_latest';
+        const SHOULD_SCROLL_KEY = 'cheff_mshia_scroll_to_latest';
 
         function scrollChatToBottom() {
             if (chatContainer) {

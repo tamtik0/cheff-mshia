@@ -464,6 +464,96 @@
         .header-btn:hover {
             background: var(--light-purple);
         }
+
+        /* Mobile responsive layout */
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+                height: auto;
+                min-height: 100vh;
+                max-width: 100%;
+            }
+
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 2px solid var(--light-purple);
+                padding: 14px;
+            }
+
+            .logo-area {
+                margin-bottom: 12px;
+                padding-bottom: 12px;
+            }
+
+            .cow-full {
+                width: 100px;
+                height: 120px;
+                margin-bottom: 8px;
+            }
+
+            .logo-text {
+                font-size: 20px;
+            }
+
+            .nav-menu {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 8px;
+                margin-top: 10px;
+            }
+
+            .nav-item {
+                margin-bottom: 0;
+                padding: 12px;
+            }
+
+            .header {
+                padding: 14px 16px;
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .header-actions {
+                flex-wrap: wrap;
+            }
+
+            .chat-container {
+                padding: 16px;
+            }
+
+            .message-bubble {
+                max-width: 88%;
+                padding: 12px 14px;
+            }
+
+            .input-area {
+                padding: 12px 14px;
+            }
+
+            .input-form {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .message-input {
+                width: 100%;
+                font-size: 16px;
+            }
+
+            .send-btn {
+                width: 100%;
+                padding: 12px;
+            }
+
+            .name-form {
+                margin: 24px auto;
+                padding: 22px;
+                max-width: 100%;
+            }
+        }
     </style>
 </head>
 

@@ -45,6 +45,23 @@ if not GROQ_API_KEY:
 
 GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
 
+# Short factual guardrails for high-frequency Georgian dishes.
+# These are injected into the system prompt and treated as canonical.
+GEORGIAN_DISH_FACTS = [
+    {
+        "aliases": ["sulguni", "sulguni", "სულგუნი"],
+        "fact": "Sulguni is a traditional Georgian brined cheese mainly associated with Samegrelo (Mingrelia), not Kartli."
+    },
+    {
+        "aliases": ["khachapuri", "ხაჭაპური"],
+        "fact": "Khachapuri has regional types (e.g., Imeruli, Adjaruli, Megruli) and should not be merged into one invented style."
+    },
+    {
+        "aliases": ["khinkali", "ხინკალი"],
+        "fact": "Khinkali is a Georgian dumpling, historically linked to mountain regions (Mtiuleti, Pshavi, Khevsureti)."
+    }
+]
+
 def load_json(filepath):
     if os.path.exists(filepath):
         with open(filepath, 'r', encoding='utf-8') as f:
@@ -327,11 +344,20 @@ def get_requested_diet(text):
         return 'vegetarian'
     return None
 
+def get_georgian_fact_context(user_message):
+    text = user_message.lower()
+    facts = []
+    for entry in GEORGIAN_DISH_FACTS:
+        if any(alias.lower() in text for alias in entry["aliases"]):
+            facts.append(entry["fact"])
+    return facts[:4]
+
 def build_prompt(user_memory, user_message, page_context=None):
     message_language = detect_message_language(user_message)
     requested_diet = get_requested_diet(user_message)
     relevant_corrections = get_relevant_corrections(user_memory, user_message)
     georgian_learning = get_relevant_georgian_learning(user_memory, user_message)
+    georgian_fact_context = get_georgian_fact_context(user_message)
 
     system = """You are Chef Mshia, a helpful recipe assistant. 
 Respond ONLY in the same language as the user's current message.
@@ -344,6 +370,9 @@ Default behavior:
 - Give a normal/traditional version of the requested dish.
 - Do NOT apply fasting,სამარხო, vegan,ვეგანური, vegetarian,ვეგეტარიანული, allergy-safe,არა ალერგიული, gluten-free, or dairy-free changes
   unless the user explicitly asks for those restrictions in the current message.
+- If user asks for a Georgian dish, prioritize authentic Georgian culinary tradition and canonical ingredients/technique.
+- Never silently swap to a different cuisine dish; if unsure, say what is uncertain and ask one short clarification question.
+- Never invent new regional dish names (example of forbidden style: "Kartli Sulguni" unless user gave a trusted source).
 
 Format recipes like this:
 **Recipe Name:** [Name 🍳] 
@@ -380,6 +409,11 @@ Format recipes like this:
         for note in georgian_learning['notes']:
             system += f"\n- {note.get('note', '')[:600]}"
 
+    if georgian_fact_context:
+        system += "\n\nCanonical Georgian dish facts (do not contradict):"
+        for fact in georgian_fact_context:
+            system += f"\n- {fact}"
+
     if page_context:
         system += (
             "\n\nRecipe page context provided by user link (use this as source material when relevant):\n"
@@ -387,6 +421,38 @@ Format recipes like this:
         )
     
     return system
+
+def extract_ai_message(result):
+    """
+    Safely extract model text from GROQ/OpenAI-like responses.
+    Returns (message, error_message). Exactly one will be non-empty.
+    """
+    if not isinstance(result, dict):
+        return "", "Unexpected API response format."
+
+    if result.get('error'):
+        err = result.get('error')
+        if isinstance(err, dict):
+            return "", err.get('message') or str(err)
+        return "", str(err)
+
+    choices = result.get('choices')
+    if not isinstance(choices, list) or not choices:
+        return "", "No reply choices were returned by the AI service."
+
+    first = choices[0] if isinstance(choices[0], dict) else {}
+    message = first.get('message', {}) if isinstance(first, dict) else {}
+    content = message.get('content') if isinstance(message, dict) else None
+
+    if isinstance(content, str) and content.strip():
+        return content, ""
+
+    # Fallback for providers that sometimes use text in different field.
+    alt_text = first.get('text') if isinstance(first, dict) else None
+    if isinstance(alt_text, str) and alt_text.strip():
+        return alt_text, ""
+
+    return "", "The AI service returned an empty response."
 
 current_sessions = {}
 
@@ -498,7 +564,7 @@ def chat():
                 "Content-Type": "application/json"
             },
             json={
-                "model": "llama-3.1-8b-instant",  # Good for Georgian!
+                "model": "llama-3.3-70b-versatile",
                 "messages": api_messages,
                 "max_tokens": 2000,
                 "temperature": 0.7
@@ -506,8 +572,20 @@ def chat():
             timeout=30
         )
         
+        if response.status_code >= 400:
+            try:
+                error_result = response.json()
+                _, api_error = extract_ai_message(error_result)
+                if not api_error:
+                    api_error = str(error_result)
+            except Exception:
+                api_error = response.text[:300] or f"HTTP {response.status_code}"
+            raise RuntimeError(f"AI API error ({response.status_code}): {api_error}")
+
         result = response.json()
-        ai_response = result['choices'][0]['message']['content']
+        ai_response, parse_error = extract_ai_message(result)
+        if parse_error:
+            raise RuntimeError(parse_error)
         if learning_saved_count:
             ai_response = (
                 f"Saved {learning_saved_count} Georgian learning note(s) to memory.\n\n"

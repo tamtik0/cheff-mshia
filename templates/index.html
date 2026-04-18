@@ -784,11 +784,10 @@
             </div>
 
             <div class="input-area">
-                <form method="POST" action="/chat" class="input-form" id="chat-form"
-                    onsubmit="this.querySelector('.send-btn').disabled = true;">
+                <form method="POST" action="/chat" class="input-form" id="chat-form">
                     <textarea name="message" class="message-input" id="message-input"
-                        placeholder="Ask me for a recipe, {{ username }}..." required {% if error %}disabled{% endif %}></textarea>
-                    <button type="submit" class="send-btn" {% if error %}disabled{% endif %}>
+                        placeholder="Ask me for a recipe, {{ username }}..." required></textarea>
+                    <button type="submit" class="send-btn">
                         ✦ Send
                     </button>
                 </form>
@@ -826,6 +825,17 @@
 
         if (chatForm) {
             chatForm.addEventListener('submit', function () {
+                const sendBtn = chatForm.querySelector('.send-btn');
+                if (sendBtn) {
+                    sendBtn.disabled = true;
+                    sendBtn.dataset.originalText = sendBtn.textContent;
+                    sendBtn.textContent = 'Sending...';
+                    // Fallback: if navigation does not happen, unlock button again.
+                    setTimeout(function () {
+                        sendBtn.disabled = false;
+                        sendBtn.textContent = sendBtn.dataset.originalText || '✦ Send';
+                    }, 12000);
+                }
                 sessionStorage.setItem(SHOULD_SCROLL_KEY, '1');
             });
         }

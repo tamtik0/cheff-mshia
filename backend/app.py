@@ -21,15 +21,15 @@ PROJECT_ROOT = os.path.dirname(BASE_DIR)
 DATA_DIR = os.path.join(BASE_DIR, 'data')
 os.makedirs(DATA_DIR, exist_ok=True)
 
-HISTORY_FILE = os.path.join(DATA_DIR, 'chat_history.json')
-FAVORITES_FILE = os.path.join(DATA_DIR, 'favorites.json')
-USER_MEMORY_FILE = os.path.join(DATA_DIR, 'user_memory.json')
+HISTORY_FL = os.path.join(DATA_DIR, 'chat_hist.json')
+FAVORITES_FL = os.path.join(DATA_DIR, 'favorites.json')
+USER_MEM_FL = os.path.join(DATA_DIR, 'user_memory.json')
 
-TEMPLATE_DIR = os.path.join(PROJECT_ROOT, 'templates')
-if not os.path.isdir(TEMPLATE_DIR):
+TEMPLT_DIR = os.path.join(PROJECT_ROOT, 'templates')
+if not os.path.isdir(TEMPLT_DIR):
     TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 
-app = Flask(__name__, template_folder=TEMPLATE_DIR)
+app = Flask(__name__, template_folder=TEMPLT_DIR)
 
 # Use environment variable for secret key (generate a new one for production!)
 # To generate: import secrets; print(secrets.token_hex(32))
@@ -47,20 +47,7 @@ GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
 
 # Short factual guardrails for high-frequency Georgian dishes.
 # These are injected into the system prompt and treated as canonical.
-GEORGIAN_DISH_FACTS = [
-    {
-        "aliases": ["sulguni", "sulguni", "სულგუნი"],
-        "fact": "Sulguni is a traditional Georgian brined cheese mainly associated with Samegrelo (Mingrelia), not Kartli."
-    },
-    {
-        "aliases": ["khachapuri", "ხაჭაპური"],
-        "fact": "Khachapuri has regional types (e.g., Imeruli, Adjaruli, Megruli) and should not be merged into one invented style."
-    },
-    {
-        "aliases": ["khinkali", "ხინკალი"],
-        "fact": "Khinkali is a Georgian dumpling, historically linked to mountain regions (Mtiuleti, Pshavi, Khevsureti)."
-    }
-]
+
 
 def load_json(filepath):
     if os.path.exists(filepath):
@@ -73,16 +60,16 @@ def save_json(filepath, data):
         json.dump(data, f, ensure_ascii=False, indent=2)
 
 def get_history():
-    data = load_json(HISTORY_FILE)
+    data = load_json(HISTORY_FL)
     if isinstance(data, list):
         return data
     return data.get('chats', [])
 
 def save_history(chats):
-    save_json(HISTORY_FILE, {'chats': chats})
+    save_json(HISTORY_FL, {'chats': chats})
 
-def get_favorites():
-    data = load_json(FAVORITES_FILE)
+def get_fav():
+    data = load_json(FAVORITES_FL)
     if isinstance(data, list):
         return data
     return data.get('recipes', [])
@@ -92,16 +79,16 @@ def get_user_history(user_id):
         return []
     return [chat for chat in get_history() if chat.get('user_id') == user_id]
 
-def get_user_favorites(user_id):
+def get_user_fav(user_id):
     if not user_id:
         return []
-    return [recipe for recipe in get_favorites() if recipe.get('user_id') == user_id]
+    return [recipe for recipe in get_fav() if recipe.get('user_id') == user_id]
 
-def save_favorites(recipes):
-    save_json(FAVORITES_FILE, {'recipes': recipes})
+def save_fav(recipes):
+    save_json(FAVORITES_FL, {'recipes': recipes})
 
 def get_user_memory():
-    memory = load_json(USER_MEMORY_FILE)
+    memory = load_json(USER_MEM_FL)
     if not isinstance(memory, dict):
         memory = {}
     memory.setdefault('corrected_recipes', [])
@@ -110,12 +97,12 @@ def get_user_memory():
     return memory
 
 def save_user_memory(memory):
-    save_json(USER_MEMORY_FILE, memory)
+    save_json(USER_MEM_FL, memory)
 
 def extract_urls(text):
     return re.findall(r'https?://[^\s<>"\]]+', text)
 
-def fetch_recipe_context_from_url(url):
+def get_rcp_url(url):
     try:
         response = requests.get(
             url,
@@ -154,7 +141,7 @@ def infer_recipe_subject(text):
             return match.group(1).strip(" .,!?:;")
     return None
 
-def looks_like_correction(text):
+def correcting_stuff(text):
     lowered = text.lower()
     correction_markers = [
         'correct recipe', 'this is correct', 'this is wrong', 'wrong recipe',
@@ -163,14 +150,14 @@ def looks_like_correction(text):
     ]
     return any(marker in lowered for marker in correction_markers)
 
-def save_recipe_correction(user_memory, user_message):
-    if not looks_like_correction(user_message):
+def right_rcp_save(user_memory, user_msg):
+    if not correcting_stuff(user_msg):
         return False
 
-    subject = infer_recipe_subject(user_message) or "general"
+    subject = infer_recipe_subject(user_msg) or "general"
     entry = {
         'subject': subject,
-        'correction': user_message.strip(),
+        'correction': user_msg.strip(),
         'updated_at': datetime.now().isoformat()
     }
 
@@ -181,12 +168,12 @@ def save_recipe_correction(user_memory, user_message):
     user_memory['corrected_recipes'] = corrected_recipes[:50]
     return True
 
-def get_relevant_corrections(user_memory, user_message):
+def get_corrections(user_memory, user_msg):
     corrected = user_memory.get('corrected_recipes', [])
     if not corrected:
         return []
 
-    lowered_message = user_message.lower()
+    lowered_message = user_msg.lower()
     matched = []
     for item in corrected:
         subject = item.get('subject', '').lower()
@@ -200,10 +187,7 @@ def get_relevant_corrections(user_memory, user_message):
     return matched[:3]
 
 def parse_georgian_learning_pairs(text):
-    # Supports lines like:
-    # ხინკალი = khinkali
-    # მაწონი: yogurt
-    # "ხაჭაპური - cheese bread"
+    
     entries = []
     for raw_line in text.splitlines():
         line = raw_line.strip().strip('-*')
@@ -221,14 +205,14 @@ def parse_georgian_learning_pairs(text):
         entries.append({'source': source[:80], 'meaning': meaning[:180]})
     return entries[:40]
 
-def save_georgian_learning(user_memory, user_message):
-    lowered = user_message.lower()
+def save_geo(user_memory, user_msg):
+    lowered = user_msg.lower()
     explicit_markers = [
-        'learn:', 'teach:', 'remember this georgian', 'save this georgian',
-        'learn georgian', 'teach you georgian', 'დაიმახსოვრე', 'ასწავლი'
+        'learn:', 'teach:', 'remember', 'save this georgian',
+        'learn georgian', 'teaching you georgian', 'დაიმახსოვრე', 'ისწავლი'
     ]
     has_explicit_learning_intent = any(marker in lowered for marker in explicit_markers)
-    parsed_pairs = parse_georgian_learning_pairs(user_message)
+    parsed_pairs = parse_georgian_learning_pairs(user_msg)
 
     saved_count = 0
 
@@ -249,7 +233,7 @@ def save_georgian_learning(user_memory, user_message):
     if has_explicit_learning_intent and any(marker in lowered for marker in grammar_markers):
         notes = user_memory.get('georgian_notes', [])
         notes.insert(0, {
-            'note': user_message.strip()[:2500],
+            'note': user_msg.strip()[:2500],
             'updated_at': datetime.now().isoformat()
         })
         user_memory['georgian_notes'] = notes[:40]
@@ -257,13 +241,13 @@ def save_georgian_learning(user_memory, user_message):
 
     return saved_count
 
-def get_relevant_georgian_learning(user_memory, user_message):
+def get_relevant_georgian_learning(user_memory, user_msg):
     lexicon = user_memory.get('georgian_lexicon', [])
     notes = user_memory.get('georgian_notes', [])
     if not lexicon and not notes:
         return {'pairs': [], 'notes': []}
 
-    text = user_message.lower()
+    text = user_msg.lower()
     pairs = []
     for item in lexicon:
         source = item.get('source', '').lower()
@@ -327,10 +311,10 @@ def detect_message_language(text):
 
     # Decide by dominant script so Georgian dish names inside an English sentence
     # do not force the whole response into Georgian.
-    latin_count = len(re.findall(r'[A-Za-z]', text))
-    georgian_count = len(re.findall(r'[\u10A0-\u10FF]', text))
+    eng_count = len(re.findall(r'[A-Za-z]', text))
+    geo_count = len(re.findall(r'[\u10A0-\u10FF]', text))
 
-    if latin_count >= georgian_count:
+    if eng_count >= geo_count:
         return 'English'
     return 'Georgian'
 
@@ -344,20 +328,14 @@ def get_requested_diet(text):
         return 'vegetarian'
     return None
 
-def get_georgian_fact_context(user_message):
-    text = user_message.lower()
-    facts = []
-    for entry in GEORGIAN_DISH_FACTS:
-        if any(alias.lower() in text for alias in entry["aliases"]):
-            facts.append(entry["fact"])
-    return facts[:4]
+
 
 def build_prompt(user_memory, user_message, page_context=None):
     message_language = detect_message_language(user_message)
     requested_diet = get_requested_diet(user_message)
-    relevant_corrections = get_relevant_corrections(user_memory, user_message)
-    georgian_learning = get_relevant_georgian_learning(user_memory, user_message)
-    georgian_fact_context = get_georgian_fact_context(user_message)
+    relevant_corrections = get_corrections(user_memory, user_message)
+    geo_learning = get_relevant_georgian_learning(user_memory, user_message)
+    
 
     system = """You are Chef Mshia, a helpful recipe assistant. 
 Respond ONLY in the same language as the user's current message.
@@ -399,21 +377,17 @@ Format recipes like this:
         for item in relevant_corrections:
             system += f"\n- Subject: {item.get('subject', 'general')} | Note: {item.get('correction', '')}"
 
-    if georgian_learning.get('pairs'):
+    if geo_learning.get('pairs'):
         system += "\n\nUser-taught Georgian vocabulary/preferences (use when helpful):"
-        for item in georgian_learning['pairs']:
+        for item in geo_learning['pairs']:
             system += f"\n- {item.get('source', '')} => {item.get('meaning', '')}"
 
-    if georgian_learning.get('notes'):
+    if geo_learning.get('notes'):
         system += "\n\nUser-taught Georgian grammar notes:"
-        for note in georgian_learning['notes']:
+        for note in geo_learning['notes']:
             system += f"\n- {note.get('note', '')[:600]}"
 
-    if georgian_fact_context:
-        system += "\n\nCanonical Georgian dish facts (do not contradict):"
-        for fact in georgian_fact_context:
-            system += f"\n- {fact}"
-
+    
     if page_context:
         system += (
             "\n\nRecipe page context provided by user link (use this as source material when relevant):\n"
@@ -518,8 +492,8 @@ def chat():
     if 'username' not in session:
         return redirect(url_for('serve_index'))
     
-    user_message = request.form.get('message', '').strip()
-    if not user_message:
+    user_msg = request.form.get('message', '').strip()
+    if not user_msg:
         return redirect(url_for('serve_index'))
     
     session_id = session.get('user_id')
@@ -527,16 +501,16 @@ def chat():
     
     # Load memory and save corrections when user provides them.
     user_memory = get_user_memory()
-    correction_saved = save_recipe_correction(user_memory, user_message)
-    learning_saved_count = save_georgian_learning(user_memory, user_message)
+    correction_saved = right_rcp_save(user_memory, user_msg)
+    learning_saved_count = save_geo(user_memory, user_msg)
     if correction_saved or learning_saved_count:
         save_user_memory(user_memory)
 
     # Pull recipe page context when user includes a URL.
     page_context = None
-    urls = extract_urls(user_message)
+    urls = extract_urls(user_msg)
     for url in urls[:2]:
-        fetched = fetch_recipe_context_from_url(url)
+        fetched = get_rcp_url(url)
         if fetched:
             page_context = f"Source URL: {url}\n{fetched}"
             break
@@ -544,11 +518,11 @@ def chat():
     # Add user message
     current_chat['messages'].append({
         'role': 'user',
-        'content': user_message
+        'content': user_msg
     })
     
     # Build system prompt
-    system_prompt = build_prompt(user_memory, user_message, page_context=page_context)
+    system_prompt = build_prompt(user_memory, user_msg, page_context=page_context)
     
     try:
         # Include recent conversation so assistant keeps context/memory in this chat.
@@ -656,11 +630,11 @@ def show_history():
     return render_template('history.html', username=session['username'], chats=chats)
 
 @app.route('/favorites')
-def show_favorites():
+def show_fav():
     if 'username' not in session:
         return redirect(url_for('serve_index'))
-    favorites = get_user_favorites(session.get('user_id'))
-    return render_template('favorites.html', username=session['username'], favorites=favorites)
+    fav = get_user_fav(session.get('user_id'))
+    return render_template('favorites.html', username=session['username'], favorites=fav)
 
 @app.route('/load_chat/<chat_id>')
 def load_chat(chat_id):
@@ -683,7 +657,7 @@ def load_chat(chat_id):
     return redirect(url_for('serve_index'))
 
 @app.route('/delete_chat/<chat_id>', methods=['POST'])
-def delete_chat(chat_id):
+def del_chat(chat_id):
     if 'user_id' not in session:
         return redirect(url_for('serve_index'))
     user_id = session['user_id']
@@ -708,7 +682,7 @@ def save_favorite():
     
     clean_content = re.sub(r'<[^>]+>', '', content)
     
-    recipes = get_favorites()
+    recipes = get_fav()
     recipe = {
         'id': str(uuid.uuid4()),
         'user_id': session['user_id'],
@@ -718,7 +692,7 @@ def save_favorite():
     }
     
     recipes.insert(0, recipe)
-    save_favorites(recipes)
+    save_fav(recipes)
     return redirect(url_for('serve_index'))
 
 @app.route('/delete_favorite/<fav_id>', methods=['POST'])
@@ -726,9 +700,9 @@ def delete_favorite(fav_id):
     if 'user_id' not in session:
         return redirect(url_for('serve_index'))
     user_id = session['user_id']
-    recipes = get_favorites()
+    recipes = get_fav()
     recipes = [r for r in recipes if not (r.get('id') == fav_id and r.get('user_id') == user_id)]
-    save_favorites(recipes)
+    save_fav(recipes)
     return redirect(url_for('show_favorites'))
 
 @app.route('/clear_memory', methods=['POST'])

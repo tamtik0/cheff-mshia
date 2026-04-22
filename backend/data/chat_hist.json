@@ -1,0 +1,46 @@
+{
+  "chats": [
+    {
+      "id": "fb251afd-c43d-4b24-b36d-718ce34866ae",
+      "user_id": "150aa2f9-9c5e-486d-9098-d619f8e8af55",
+      "title": "New Chat",
+      "messages": [
+        {
+          "role": "user",
+          "content": "heyy can u make me some strawbery cake or muffin whichever is easier"
+        },
+        {
+          "role": "assistant",
+          "content": "**Recipe Name:** Strawberry Muffin \n**Time:** 30 minutes \n**Difficulty:** Easy \n\n**Ingredients:**\n* 2 1/4 cups all-purpose flour\n* 1 cup granulated sugar\n* 2 teaspoons baking powder\n* 1/4 teaspoon salt\n* 1/2 cup unsalted butter, melted\n* 1 cup milk\n* 2 large eggs\n* 2 cups hulled and sliced strawberries\n* 1 teaspoon vanilla extract\n\n**Instructions:**\n1. Preheat the oven to 375°F (190°C). Line a 12-cup muffin tin with paper liners.\n2. In a medium bowl, whisk together the flour, sugar, baking powder, and salt.\n3. In a large bowl, whisk together the melted butter, milk, eggs, and vanilla extract.\n4. Add the dry ingredients to the wet ingredients and stir until just combined. Do not overmix.\n5. Gently fold in the sliced strawberries.\n6. Divide the batter evenly among the muffin cups.\n7. Bake for 20-25 minutes, or until the muffins are golden brown and a toothpick inserted into the center of a muffin comes out clean.\n8. Allow the muffins to cool in the tin for 5 minutes, then transfer them to a wire rack to cool completely.\n\nIf you'd like to make a cake instead, I can provide you with a recipe for a strawberry cake. However, muffins are generally easier and quicker to make. Let me know if you have any questions or if you'd like any variations on this recipe!"
+        }
+      ],
+      "created_at": "2026-04-22T21:53:21.828140",
+      "updated_at": "2026-04-22T21:53:57.575094"
+    },
+    {
+      "id": "9580f413-8c56-418e-9c4d-0c6bea86724a",
+      "user_id": "150aa2f9-9c5e-486d-9098-d619f8e8af55",
+      "title": "New Chat",
+      "messages": [
+        {
+          "role": "user",
+          "content": "umm i want some meat soup with chiken"
+        },
+        {
+          "role": "assistant",
+          "content": "**Recipe Name:** Chicken Meat Soup 🍳\n**Time:** 40 minutes 🕒\n**Difficulty:** Medium ✅\n\n**Ingredients:**\n* 1 kg chicken breast or thighs\n* 2 medium carrots, chopped\n* 2 medium potatoes, chopped\n* 1 large onion, chopped\n* 2 cloves of garlic, minced\n* 1 teaspoon dried thyme\n* 1/2 teaspoon salt\n* 1/4 teaspoon black pepper\n* 4 cups chicken broth\n* 2 cups water\n* 2 tablespoons butter\n\n**Instructions:**\n1. In a large pot, melt the butter over medium heat. Add the chopped onion and cook until softened, about 5 minutes.\n2. Add the chopped carrots and potatoes, cook for another 5 minutes, stirring occasionally.\n3. Add the chicken to the pot, cook until browned on all sides, about 5-7 minutes.\n4. Add the garlic, thyme, salt, and pepper, stir to combine.\n5. Pour in the chicken broth and water, bring to a boil.\n6. Reduce the heat to low, cover the pot, and simmer for 20-25 minutes, or until the chicken is cooked through and the vegetables are tender.\n7. Serve hot, garnished with fresh herbs if desired.\n\nNote: You can also add other vegetables like celery, mushrooms, or peas to the soup if you like. Enjoy! 🍲"
+        },
+        {
+          "role": "user",
+          "content": "umm can u make me simple recipe im not really good with cooking and fast recipe haha"
+        },
+        {
+          "role": "assistant",
+          "content": "**Recipe Name:** Quick Chicken Soup 🍲\n**Time:** 20 minutes 🕒\n**Difficulty:** Easy ✅\n\n**Ingredients:**\n* 1 kg chicken breast or thighs\n* 2 cups chicken broth\n* 1 medium carrot, chopped\n* 1/2 teaspoon salt\n* 1/4 teaspoon black pepper\n\n**Instructions:**\n1. Boil the chicken broth in a large pot.\n2. Add the chopped carrot and chicken to the pot.\n3. Cook for 15-20 minutes, or until the chicken is cooked through and the carrot is tender.\n4. Season with salt and pepper to taste.\n5. Serve hot and enjoy!\n\nThat's it! This recipe is super simple and fast, and you can't go wrong with it. Just throw everything in a pot and let it cook. 😊"
+        }
+      ],
+      "created_at": "2026-04-22T21:48:23.759641",
+      "updated_at": "2026-04-22T21:49:41.581000"
+    }
+  ]
+}

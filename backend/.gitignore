@@ -11,4 +11,8 @@ Thumbs.db
 .vscode/
 
 # App data (optional, if you don't want local chat data on GitHub)
-backend/data/
+data/
+
+# Local notes / explanations (keep on your machine only)
+notes.txt
+*explanation*.txt

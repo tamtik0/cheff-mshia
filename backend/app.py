@@ -481,6 +481,11 @@ def format_response(text):
     text = text.replace('\n', '<br>')
     return text
 #--------web routes----------
+@app.route('/robots.txt')
+def robots():
+    return "User-agent: *\nAllow: /", 200, {'Content-Type': 'text/plain'}
+
+    
 @app.route('/')# defines home page url
 def serve_index():
     #render the main page and handle user ses logic

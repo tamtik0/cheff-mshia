@@ -17,3 +17,10 @@ data/
 notes.txt
 app_detailed_explanation.txt
 app_explanation_super_simple.txt
+
+#json files
+data/chat_history.json
+data/favorites.json
+data/user_memory.json
+
+COURSE_PAPER_DEVELOPMENT_REPORT.md

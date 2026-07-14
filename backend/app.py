@@ -5,6 +5,10 @@ AI Recipe ChatBot with GROQ API (High limits, works with Georgian)
 from flask import Flask, request, render_template, session, redirect, url_for
 from flask_cors import CORS #talk to other sites
 from dotenv import load_dotenv # reads .env
+from markupsafe import escape, Markup
+from flask_cors import CORS #talk to other sites
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 import requests #getting data from other sites
 import os #int wth cmptr os fr fndign files
 import json #rd/wrt jsn files
@@ -12,6 +16,9 @@ import uuid#gnrt unique ids fr usr/ct/fav
 import re #find patrn in txt
 import html 
 from datetime import datetime #fr timestamps
+import socket
+import ipaddress
+from urllib.parse import urlparse
 
 #---------setup-----------
 # Load environment variables from .env file
@@ -34,10 +41,21 @@ app = Flask(__name__, template_folder=TEMPLT_DIR)# Initialize the Flask app
 
 
 # Security key for sessions
-app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
-#enabl cors for all routes on this app instance
-CORS(app)
+app.secret_key = os.environ.get('SECRET_KEY')
+if not app.secret_key:
+    raise ValueError("SECRET_KEY environment variable not set! Set it in Render's Environmnet tab.")
 
+# Restrict cross-origin requests to just this app's own domain
+CORS(app, origins=["https://cheff-mshia.onrender.com"])
+
+# Rate limiting: protects the shared Groq key and prevents one user
+# from exhausting the app for everyone else
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=["200 per hour"],
+    storage_uri="memory://",
+)
 
 # get api key from environmet variables
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
@@ -114,12 +132,33 @@ def extract_urls(text):
    # Scans the text and returns a list of all web addresses found
     return re.findall(r'https?://[^\s<>"\]]+', text)
 
+def is_safe_url(url):
+    """Reject URLs pointing at internal/private/loopback addresses to prevent SSRF."""
+    try:
+        parsed = urlparse(url)
+        if parsed.scheme not in ('http', 'https'):
+            return False
+        hostname = parsed.hostname
+        if not hostname:
+            return False
+        for family , _, _, _, sockaddr in socket.getaddrinfo(hostname, None):
+            ip = ipaddress.ip_address(sockaddr[0])
+            if ip.is_private or ip.is_loopback or ip.is_link_local or ip.is_reserved or ip.is_multicast:
+                return False
+        return True
+    except Exception:
+        return False
+
+    
+
 def get_rcp_url(url):
     """
     Fetch a recipe page and convert HTML into compact plain text context.
     Returns None when fetch/parsing fails or content is not text-like.
     """
     try:
+        if not is_safe_url(url):
+            return None
         response = requests.get(
             url,
             timeout=12,
@@ -474,12 +513,12 @@ def get_current_chat(session_id):
     return current_sessions[session_id]
 
 def format_response(text):
-    """Convert minimal markdown-style output to simple HTML for template rendering."""
+    """Escape user/AI content first, then apply safe minimal formatting."""
     # Convert markdown to HTML
-    text = text.replace('**', '<strong>').replace('**', '</strong>')
-    text = text.replace('\n\n', '<br><br>')
-    text = text.replace('\n', '<br>')
-    return text
+    escaped = str(escape(text))
+    escaped = escaped.replace('**', '<strong>', 1).replace('**', '</strong>', 1)
+    escaped = escaped.replace('\n\n', '<br><br>').replace('\n', '<br>')
+    return Markup(escaped)
 #--------web routes----------
 @app.route('/robots.txt')
 def robots():
@@ -529,6 +568,7 @@ def set_name():
     return redirect(url_for('serve_index'))
 
 @app.route('/chat', methods=['POST'])
+@limiter.limit("10 per minute; 100 per day")
 def chat():
     #reades user memory
     if 'username' not in session:

@@ -6,7 +6,6 @@ from flask import Flask, request, render_template, session, redirect, url_for
 from flask_cors import CORS #talk to other sites
 from dotenv import load_dotenv # reads .env
 from markupsafe import escape, Markup
-from flask_cors import CORS #talk to other sites
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 import requests #getting data from other sites
@@ -162,11 +161,19 @@ def get_rcp_url(url):
         response = requests.get(
             url,
             timeout=12,
+            allow_redirects=False,
             headers={"User-Agent": "Mozilla/5.0 (ChefMshiaRecipeBot)"}
         )
+        if response.status_code in (301, 302, 303, 307, 308):
+            return None
         response.raise_for_status()
         content_type = response.headers.get('Content-Type', '').lower()
         if 'text' not in content_type and 'html' not in content_type:
+            return None
+        content_length = response.headers.get('Content-Length')
+        if content_length and int(content_length) > 2_000_000:
+            return None
+        if len(response.content) > 2_000_000:
             return None
 
         raw_html = response.text
@@ -499,7 +506,21 @@ def extract_ai_message(result):
 
     return "", "The AI service returned an empty response."
 
-current_sessions = {}# A dictionary to keep track of active users and their chat data
+current_sessions = {}
+SESSION_TTL_SECONDS = 3600  # 1 hour of inactivity
+
+def prune_old_sessions():
+    now = datetime.now()
+    stale = []
+    for sid, chat in current_sessions.items():
+        try:
+            created = datetime.fromisoformat(chat['created_at'])
+            if (now - created).total_seconds() > SESSION_TTL_SECONDS:
+                stale.append(sid)
+        except Exception:
+            stale.append(sid)
+    for sid in stale:
+        current_sessions.pop(sid, None)
 
 def get_current_chat(session_id):
     #gets in current chat if dont exist creates it 
@@ -574,7 +595,7 @@ def chat():
     if 'username' not in session:
         return redirect(url_for('serve_index'))
     
-    user_msg = request.form.get('message', '').strip()
+    user_msg = request.form.get('message', '').strip()[:3000]
     if not user_msg:
         return redirect(url_for('serve_index'))
     

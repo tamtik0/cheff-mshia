@@ -555,7 +555,6 @@
                 max-width: 100%;
             }
         }
-        
     </style>
 </head>
 
@@ -772,7 +771,7 @@
                     </svg>
                     <div class="message-bubble">
                         <div class="message-header">Cheff Mshia says:</div>
-                        <div>{{ msg.content | safe }}</div>
+                        <div>{{ msg.content }}</div>
                         <!-- Save Recipe Button -->
                         <form method="POST" action="/save_favorite" style="margin-top: 10px;">
                             <input type="hidden" name="content" value="{{ msg.content }}">
@@ -807,72 +806,73 @@
 
         </main>
     </div>
-<script>
-    (function () {
-        const chatContainer = document.getElementById('chat-container');
-        const chatForm = document.getElementById('chat-form');
-        const messageInput = document.getElementById('message-input');
-        const bottomAnchor = document.getElementById('chat-bottom-anchor');
-        const SHOULD_SCROLL_KEY = 'cheff_mshia_scroll_to_latest';
+    <script>
+        (function () {
+            const chatContainer = document.getElementById('chat-container');
+            const chatForm = document.getElementById('chat-form');
+            const messageInput = document.getElementById('message-input');
+            const bottomAnchor = document.getElementById('chat-bottom-anchor');
+            const SHOULD_SCROLL_KEY = 'cheff_mshia_scroll_to_latest';
 
-        function scrollChatToBottom() {
-            if (chatContainer) {
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-            }
-            if (bottomAnchor) {
-                bottomAnchor.scrollIntoView({ block: 'end' });
-            }
-            window.scrollTo(0, document.body.scrollHeight);
-        }
-
-        if (chatForm) {
-            chatForm.addEventListener('submit', function () {
-                const sendBtn = chatForm.querySelector('.send-btn');
-                if (sendBtn) {
-                    sendBtn.disabled = true;
-                    sendBtn.dataset.originalText = sendBtn.textContent;
-                    sendBtn.textContent = 'Sending...';
-                    // Fallback: if navigation does not happen, unlock button again.
-                    setTimeout(function () {
-                        sendBtn.disabled = false;
-                        sendBtn.textContent = sendBtn.dataset.originalText || '✦ Send';
-                    }, 12000);
+            function scrollChatToBottom() {
+                if (chatContainer) {
+                    chatContainer.scrollTop = chatContainer.scrollHeight;
                 }
-                sessionStorage.setItem(SHOULD_SCROLL_KEY, '1');
-            });
-        }
+                if (bottomAnchor) {
+                    bottomAnchor.scrollIntoView({ block: 'end' });
+                }
+                window.scrollTo(0, document.body.scrollHeight);
+            }
 
-        if (sessionStorage.getItem(SHOULD_SCROLL_KEY) === '1') {
-            scrollChatToBottom();
-            sessionStorage.removeItem(SHOULD_SCROLL_KEY);
-        }
-
-        // Keep chat at latest when page loads/reloads.
-        scrollChatToBottom();
-        setTimeout(scrollChatToBottom, 50);
-        setTimeout(scrollChatToBottom, 200);
-
-        // Auto-grow textarea for long prompts.
-        if (messageInput) {
-            const autoResize = function () {
-                this.style.height = 'auto';
-                this.style.height = Math.min(this.scrollHeight, 220) + 'px';
-            };
-
-            messageInput.addEventListener('input', autoResize);
-            autoResize.call(messageInput);
-
-            // Enter sends, Shift+Enter adds newline.
-            messageInput.addEventListener('keydown', function (event) {
-                if (event.key === 'Enter' && !event.shiftKey) {
-                    event.preventDefault();
-                    if (chatForm) {
-                        chatForm.requestSubmit();
+            if (chatForm) {
+                chatForm.addEventListener('submit', function () {
+                    const sendBtn = chatForm.querySelector('.send-btn');
+                    if (sendBtn) {
+                        sendBtn.disabled = true;
+                        sendBtn.dataset.originalText = sendBtn.textContent;
+                        sendBtn.textContent = 'Sending...';
+                        // Fallback: if navigation does not happen, unlock button again.
+                        setTimeout(function () {
+                            sendBtn.disabled = false;
+                            sendBtn.textContent = sendBtn.dataset.originalText || '✦ Send';
+                        }, 12000);
                     }
-                }
-            });
-        }
-    })();
-</script>
- </body>
+                    sessionStorage.setItem(SHOULD_SCROLL_KEY, '1');
+                });
+            }
+
+            if (sessionStorage.getItem(SHOULD_SCROLL_KEY) === '1') {
+                scrollChatToBottom();
+                sessionStorage.removeItem(SHOULD_SCROLL_KEY);
+            }
+
+            // Keep chat at latest when page loads/reloads.
+            scrollChatToBottom();
+            setTimeout(scrollChatToBottom, 50);
+            setTimeout(scrollChatToBottom, 200);
+
+            // Auto-grow textarea for long prompts.
+            if (messageInput) {
+                const autoResize = function () {
+                    this.style.height = 'auto';
+                    this.style.height = Math.min(this.scrollHeight, 220) + 'px';
+                };
+
+                messageInput.addEventListener('input', autoResize);
+                autoResize.call(messageInput);
+
+                // Enter sends, Shift+Enter adds newline.
+                messageInput.addEventListener('keydown', function (event) {
+                    if (event.key === 'Enter' && !event.shiftKey) {
+                        event.preventDefault();
+                        if (chatForm) {
+                            chatForm.requestSubmit();
+                        }
+                    }
+                });
+            }
+        })();
+    </script>
+</body>
+
 </html>

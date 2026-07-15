@@ -44,6 +44,9 @@ app.secret_key = os.environ.get('SECRET_KEY')
 if not app.secret_key:
     raise ValueError("SECRET_KEY environment variable not set! Set it in Render's Environmnet tab.")
 
+app.config['SESSION_COOKIE_SECURE'] = True      # cookie only sent over HTTPS
+app.config['SESSION_COOKIE_HTTPONLY'] = True     # already default, but explicit is safer
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'    # explicit CSRF baseline, don't rely on browser defaults
 # Restrict cross-origin requests to just this app's own domain
 CORS(app, origins=["https://cheff-mshia.onrender.com"])
 
@@ -524,6 +527,7 @@ def prune_old_sessions():
 
 def get_current_chat(session_id):
     #gets in current chat if dont exist creates it 
+    prune_old_sessions()
     if session_id not in current_sessions:
         current_sessions[session_id] = {
             'id': str(uuid.uuid4()),

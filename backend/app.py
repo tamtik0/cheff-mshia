@@ -18,6 +18,7 @@ from datetime import datetime #fr timestamps
 import socket
 import ipaddress
 from urllib.parse import urlparse
+import tempfile
 
 #---------setup-----------
 # Load environment variables from .env file
@@ -78,10 +79,16 @@ def load_json(filepath):
     return {}
 #saves data into json fl
 def save_json(filepath, data):
-    """Persist Python data as UTF-8 JSON with pretty indentation."""
-    with open(filepath, 'w', encoding='utf-8') as f:
-        #ensure_ascii=false aloows spec char,indent=2 makses it readable for humans
-        json.dump(data, f, ensure_ascii=False, indent=2)
+    """Persist JSON atomically to avoid corruption from concurrent writes."""
+    dir_name = os.path.dirname(filepath)
+    fd, tmp_path = tempfile.mkstemp(dir=dir_name, suffix='.tmp')
+    try:
+        with os.fdopen(fd, 'w', encoding='utf-8') as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+        os.replace(tmp_path, filepath)  # atomic on POSIX
+    except Exception:
+        os.unlink(tmp_path)
+        raise
 
 def get_history():
     """Load chat history and normalize legacy/modern file formats to a chat list."""

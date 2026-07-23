@@ -599,6 +599,10 @@ def set_name():
         }
     return redirect(url_for('serve_index'))
 
+@app.errorhandler(405)
+def method_not_allowed(e):
+    return redirect(url_for('serve_index'))
+
 @app.route('/chat', methods=['POST'])
 @limiter.limit("10 per minute; 100 per day")
 def chat():

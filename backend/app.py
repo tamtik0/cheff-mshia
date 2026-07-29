@@ -119,6 +119,16 @@ def create_chat(user_id):
     result = supabase.table('chats').insert({'user_id': user_id, 'title': 'New Chat'}).execute()
     return result.data[0]
 
+def signup_user(email, password):
+    response = supabase.auth.sign_up({"email": email, "password": password})
+    # Safely get the user id
+    return response.user.id if response and response.user else None
+
+def login_user(email, password):
+    response = supabase.auth.sign_in_with_password({"email": email, "password": password})
+    return response.user.id if response and response.user else None
+
+
 def add_message(chat_id, role, content):
     result = supabase.table('messages').insert({
         'chat_id': chat_id,
@@ -572,15 +582,11 @@ def robots():
     return "User-agent: *\nAllow: /", 200, {'Content-Type': 'text/plain'}
 
     
-@app.route('/')# defines home page url
+@app.route('/')
 def serve_index():
-    #render the main page and handle user ses logic
-    if 'username' not in session:
-        return render_template('index.html', username=None)
-    #get existing user id or create new one
-    session_id = session.get('user_id', str(uuid.uuid4()))
-    if 'user_id' not in session: # saving that id into browser ses so it remembers server
-        session['user_id'] = session_id
+    if 'user_id' not in session:
+        return render_template('index.html', username=None, error=session.pop('error', None))
+    session_id = session['user_id']
     #getting active chat msgs from this user 
     current_chat = get_current_chat(session_id)
     
@@ -596,6 +602,38 @@ def serve_index():
                          username=session['username'],
                          messages=formatted_messages,
                          error=session.pop('error', None))
+
+@app.route('/signup', methods=['POST'])
+def signup():
+    email = request.form.get('email', '').strip()
+    password = request.form.get('password', '')
+    if not email or len(password) < 8:
+        session['error'] = "Password must be at least 8 characters."
+        return redirect(url_for('serve_index'))
+    try:
+        signup_user(email, password)
+        session['error'] = "Account created! Check your email to confirm it, then log in below."
+    except Exception as e:
+        session['error'] = f"Signup failed: {str(e)}"
+    return redirect(url_for('serve_index'))
+
+@app.route('/login', methods=['POST'])
+def login():
+    email = request.form.get('email', '').strip()
+    password = request.form.get('password', '')
+    try:
+        user_id = login_user(email, password)
+        session.clear()
+        session['user_id'] = user_id
+        session['username'] = email.split('@')[0]
+    except Exception:
+        session['error'] = "Invalid email or password, or your account isn't confirmed yet."
+    return redirect(url_for('serve_index'))
+
+@app.route('/logout', methods=['POST'])
+def logout():
+    session.clear()
+    return redirect(url_for('serve_index'))
 
 @app.route('/set_name', methods=['POST'])
 def set_name():

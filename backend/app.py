@@ -19,6 +19,7 @@ import socket
 import ipaddress
 from urllib.parse import urlparse
 import tempfile
+from db import supabase
 
 #---------setup-----------
 # Load environment variables from .env file
@@ -109,10 +110,23 @@ def get_fav():
     return data.get('recipes', [])
 
 def get_user_history(user_id):
-    """Return only chat records that belong to the current user."""
-    if not user_id: #if user_id is wrong return empty
+    if not user_id:
         return []
-    return [chat for chat in get_history() if chat.get('user_id') == user_id]#if it exist pr correct
+    result = supabase.table('chats').select('*').eq('user_id', user_id).order('created_at', desc=True).execute()
+    return result.data
+
+def create_chat(user_id):
+    result = supabase.table('chats').insert({'user_id': user_id, 'title': 'New Chat'}).execute()
+    return result.data[0]
+
+def add_message(chat_id, role, content):
+    result = supabase.table('messages').insert({
+        'chat_id': chat_id,
+        'role': role,
+        'content': content
+    }).execute()
+    return result.data[0]
+
 
 def get_user_fav(user_id):
     """Return only favorite recipe entries created by the current user."""

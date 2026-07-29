@@ -2,6 +2,9 @@
 AI Recipe ChatBot with GROQ API (High limits, works with Georgian)
 """
 # importing main engine 
+import os
+import sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from flask import Flask, request, render_template, session, redirect, url_for
 from flask_cors import CORS #talk to other sites
 from dotenv import load_dotenv # reads .env

@@ -129,27 +129,28 @@ def add_message(chat_id, role, content):
 
 
 def get_user_fav(user_id):
-    """Return only favorite recipe entries created by the current user."""
     if not user_id:
         return []
-    return [recipe for recipe in get_fav() if recipe.get('user_id') == user_id]#same here 
+    result = supabase.table('favorites').select('*').eq('user_id', user_id).order('created_at', desc=True).execute()
+    return result.data
 
-def save_fav(recipes):
-    #saving fac recipes in favorites_fl
-    save_json(FAVORITES_FL, {'recipes': recipes})
+def add_favorite(user_id, title, content):
+    result = supabase.table('favorites').insert({
+        'user_id': user_id,
+        'title': title,
+        'content': content
+    }).execute()
+    return result.data[0]
 
-def get_user_memory():
-    """Load long-term user memory and ensure expected memory buckets exist."""
-    memory = load_json(USER_MEM_FL)# loads users memory file
-    if not isinstance(memory, dict): #check for this down if dont exist creates them by setdefault
-        memory = {}
-    memory.setdefault('corrected_recipes', [])
-    memory.setdefault('georgian_lexicon', [])
-    memory.setdefault('georgian_notes', [])
-    return memory
+def get_user_memory(user_id):
+    result = supabase.table('user_memory').select('*').eq('user_id', user_id).execute()
+    if result.data:
+        return result.data[0]
+    return {'user_id': user_id, 'corrected_recipes': [], 'georgian_lexicon': [], 'georgian_notes': []}
 
-def save_user_memory(memory):
-    save_json(USER_MEM_FL, memory)
+def save_user_memory(user_id, memory):
+    memory['user_id'] = user_id
+    supabase.table('user_memory').upsert(memory).execute()
 
 def extract_urls(text):
    # Scans the text and returns a list of all web addresses found

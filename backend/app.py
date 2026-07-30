@@ -658,9 +658,13 @@ def logout():
 def auth_google():
     result = supabase.auth.sign_in_with_oauth({
         "provider": "google",
-        "options": {"redirect_to": "https://cheff-mshia.onrender.com/auth/callback"}
+        "options": {
+            "redirect_to": request.host_url.rstrip('/') + "/auth/callback",
+            "query_params": {"prompt": "select_account"}
+        }
     })
     return redirect(result.url)
+
 
 @app.route('/auth/callback')
 def auth_callback():
@@ -819,36 +823,20 @@ def new_chat():
 
 @app.route('/save_chat', methods=['POST'])
 def save_current_chat():
-    """Persist the current in-memory chat into chat history storage."""
     if 'user_id' not in session:
         return redirect(url_for('serve_index'))
-    
     session_id = session['user_id']
     current_chat = current_sessions.get(session_id)
-    
     if not current_chat or not current_chat['messages']:
         return redirect(url_for('serve_index'))
-    
-    chats = get_history()
-    existing = next((c for c in chats if c['id'] == current_chat['id']), None)
-    
-    chat_data = {
-        'id': current_chat['id'],
-        'user_id': session_id,
-        'title': current_chat['title'],
-        'messages': current_chat['messages'],
-        'created_at': current_chat['created_at'],
-        'updated_at': datetime.now().isoformat()
-    }
-    
-    if existing:
-        idx = chats.index(existing)
-        chats[idx] = chat_data
-    else:
-        chats.insert(0, chat_data)
-    
-    chats = chats[:50]
-    save_history(chats)
+    # If this in-memory chat was never persisted yet, create the real row now
+    existing = supabase.table('chats').select('id').eq('id', current_chat['id']).execute()
+    if not existing.data:
+        supabase.table('chats').insert({
+            'id': current_chat['id'],
+            'user_id': session_id,
+            'title': current_chat['title']
+        }).execute()
     return redirect(url_for('serve_index'))
 
 @app.route('/history')

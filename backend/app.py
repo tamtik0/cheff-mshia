@@ -17,12 +17,13 @@ import json #rd/wrt jsn files
 import uuid#gnrt unique ids fr usr/ct/fav
 import re #find patrn in txt
 import html 
-from datetime import datetime #fr timestamps
+from datetime import datetime  #fr timestamps
 import socket
 import ipaddress
 from urllib.parse import urlparse
 import tempfile
 from db import supabase
+from datetime import date
 
 #---------setup-----------
 # Load environment variables from .env file
@@ -139,6 +140,17 @@ def add_message(chat_id, role, content):
         'content': content
     }).execute()
     return result.data[0]
+
+def get_chat_messages(chat_id):
+    """Fetch all messages for a given chat, oldest first."""
+    if not chat_id:
+        return []
+    result = supabase.table('messages') \
+        .select('*') \
+        .eq('chat_id', chat_id) \
+        .order('created_at') \
+        .execute()
+    return result.data
 
 
 def get_user_fav(user_id):
@@ -633,9 +645,41 @@ def login():
         session['error'] = "Invalid email or password, or your account isn't confirmed yet."
     return redirect(url_for('serve_index'))
 
+@app.route('/terms')
+def terms():
+    return render_template('terms.html', today=date.today().strftime("%B %d, %Y"), contact_email="termakozashvilitamta@gmail.com")
+
 @app.route('/logout', methods=['POST'])
 def logout():
     session.clear()
+    return redirect(url_for('serve_index'))
+
+@app.route('/auth/google')
+def auth_google():
+    result = supabase.auth.sign_in_with_oauth({
+        "provider": "google",
+        "options": {"redirect_to": "https://cheff-mshia.onrender.com/auth/callback"}
+    })
+    return redirect(result.url)
+
+@app.route('/auth/callback')
+def auth_callback():
+    code = request.args.get('code')
+    if not code:
+        session['error'] = "Google sign-in was cancelled or failed."
+        return redirect(url_for('serve_index'))
+    try:
+        # exchange_code_for_session requires code_verifier and redirect_to in some client implementations
+        result = supabase.auth.exchange_code_for_session({
+            "auth_code": code,
+            "redirect_to": "https://cheff-mshia.onrender.com/auth/callback",
+            "code_verifier": os.environ.get("SUPABASE_CODE_VERIFIER", "")
+        })
+        session.clear()
+        session['user_id'] = result.user.id
+        session['username'] = result.user.email.split('@')[0]
+    except Exception as e:
+        session['error'] = f"Google sign-in failed: {str(e)}"
     return redirect(url_for('serve_index'))
 
 @app.route('/set_name', methods=['POST'])
@@ -684,11 +728,11 @@ def chat():
     current_chat = get_current_chat(session_id)
     
     # Load memory and save corrections when user provides them.
-    user_memory = get_user_memory()
+    user_memory = get_user_memory(session_id)
     correction_saved = right_rcp_save(user_memory, user_msg)
     learning_saved_count = save_geo(user_memory, user_msg)
     if correction_saved or learning_saved_count:
-        save_user_memory(user_memory)
+        save_user_memory(session_id, user_memory)
 
     # Pull recipe page context when user includes a URL.
     page_context = None
@@ -830,15 +874,17 @@ def load_chat(chat_id):
         return redirect(url_for('serve_index'))
     
     chats = get_user_history(session['user_id'])
-    chat = next((c for c in chats if c['id'] == chat_id), None)
-    
+    # str(...) handles UUID vs string mismatch from Supabase
+    chat = next((c for c in chats if str(c.get('id')) == chat_id), None)
+
     if chat:
         session_id = session['user_id']
+        # Messages live in a separate Supabase table — fetch them separately
         current_sessions[session_id] = {
             'id': chat['id'],
-            'title': chat['title'],
-            'messages': chat['messages'],
-            'created_at': chat['created_at'],
+            'title': chat.get('title', 'New Chat'),
+            'messages': get_chat_messages(chat['id']),
+            'created_at': chat.get('created_at'),
             'user_id': session_id
         }
     
@@ -850,9 +896,9 @@ def del_chat(chat_id):
     if 'user_id' not in session:
         return redirect(url_for('serve_index'))
     user_id = session['user_id']
-    chats = get_history()
-    chats = [c for c in chats if not (c.get('id') == chat_id and c.get('user_id') == user_id)]
-    save_history(chats)
+    # Delete messages first (foreign key dependency), then the chat itself
+    supabase.table('messages').delete().eq('chat_id', chat_id).execute()
+    supabase.table('chats').delete().eq('id', chat_id).eq('user_id', user_id).execute()
     return redirect(url_for('show_history'))
 
 @app.route('/save_favorite', methods=['POST'])
@@ -862,8 +908,7 @@ def save_favorite():
     if not content or 'user_id' not in session:
         return redirect(url_for('serve_index'))
     
-    # Extract title
-    import re
+    # Extract title from formatted recipe content
     title_match = re.search(r'Recipe Name:(.*?)(<|$)', content, re.IGNORECASE)
     if title_match:
         title = title_match.group(1).strip()
@@ -871,18 +916,7 @@ def save_favorite():
         title = content.split('\n')[0][:50]
     
     clean_content = re.sub(r'<[^>]+>', '', content)
-    
-    recipes = get_fav()
-    recipe = {
-        'id': str(uuid.uuid4()),
-        'user_id': session['user_id'],
-        'title': title or 'Recipe',
-        'content': clean_content,
-        'created_at': datetime.now().isoformat()
-    }
-    
-    recipes.insert(0, recipe)
-    save_fav(recipes)
+    add_favorite(session['user_id'], title or 'Recipe', clean_content)
     return redirect(url_for('serve_index'))
 
 @app.route('/delete_favorite/<fav_id>', methods=['POST'])
@@ -890,16 +924,22 @@ def delete_favorite(fav_id):
     """Delete one favorite recipe entry that belongs to the current user."""
     if 'user_id' not in session:
         return redirect(url_for('serve_index'))
-    user_id = session['user_id']
-    recipes = get_fav()
-    recipes = [r for r in recipes if not (r.get('id') == fav_id and r.get('user_id') == user_id)]
-    save_fav(recipes)
-    return redirect(url_for('show_favorites'))
+    supabase.table('favorites').delete() \
+        .eq('id', fav_id) \
+        .eq('user_id', session['user_id']) \
+        .execute()
+    return redirect(url_for('show_fav'))
 
 @app.route('/clear_memory', methods=['POST'])
 def clear_memory():
     """Reset persisted user memory (corrections, vocabulary, grammar notes)."""
-    save_user_memory({})
+    if 'user_id' not in session:
+        return redirect(url_for('serve_index'))
+    save_user_memory(session['user_id'], {
+        'corrected_recipes': [],
+        'georgian_lexicon': [],
+        'georgian_notes': []
+    })
     return redirect(url_for('serve_index'))
 
 if __name__ == '__main__':

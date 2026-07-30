@@ -851,6 +851,9 @@
                     <form method="POST" action="/save_chat" style="display: inline;">
                         <button type="submit" class="header-btn">💾 Save Chat</button>
                     </form>
+                    <form method="POST" action="/logout" style="display: inline;">
+                        <button type="submit" class="header-btn">🚪 Logout</button>
+                    </form>
                 </div>
             </div>
 
@@ -1028,14 +1031,14 @@
                             chatForm.requestSubmit();
                         }
                     }
-                    function showTab(tab) {
-                        document.querySelectorAll('.auth-panel').forEach(p => p.style.display = 'none');
-                        document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
-                        document.getElementById(tab + '-panel').style.display = 'block';
-                        if (tab === 'signin') document.querySelectorAll('.auth-tab')[0].classList.add('active');
-                        if (tab === 'signup') document.querySelectorAll('.auth-tab')[1].classList.add('active');
-                    }
                 });
+            }
+            function showTab(tab) {
+                document.querySelectorAll('.auth-panel').forEach(p => p.style.display = 'none');
+                document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+                document.getElementById(tab + '-panel').style.display = 'block';
+                if (tab === 'signin') document.querySelectorAll('.auth-tab')[0].classList.add('active');
+                if (tab === 'signup') document.querySelectorAll('.auth-tab')[1].classList.add('active');
             }
         })();
     </script>

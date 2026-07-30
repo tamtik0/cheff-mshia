@@ -655,6 +655,16 @@ def set_name():
         }
     return redirect(url_for('serve_index'))
 
+@app.route('/forgot_password', methods=['POST'])
+def forgot_password():
+    email = request.form.get('email', '').strip()
+    try:
+        supabase.auth.reset_password_email(email, {"redirect_to": "https://cheff-mshia.onrender.com/reset_password"})
+        session['error'] = "If that email exists, a reset link has been sent."
+    except Exception:
+        session['error'] = "If that email exists, a reset link has been sent."
+    return redirect(url_for('serve_index'))
+
 @app.errorhandler(405)
 def method_not_allowed(e):
     return redirect(url_for('serve_index'))
